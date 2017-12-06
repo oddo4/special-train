@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FightBehaviour.Interfaces;
+using FightBehaviour.Behaviors;
 
 namespace FightBehaviour.Classes
 {
@@ -10,9 +12,9 @@ namespace FightBehaviour.Classes
     {
         public string Name;
         public CharacterStats Stats;
-        private Interfaces.IAttackBehavior _attackBehavior = new Behaviors.BasicAttackBehavior();
+        private IAttackBehavior _attackBehavior = new BasicAttackBehavior();
 
-        public Interfaces.IAttackBehavior AttackBehavior
+        public IAttackBehavior AttackBehavior
         {
             get { return _attackBehavior; }
             set { _attackBehavior = value; }
