@@ -12,14 +12,27 @@ namespace FightBehaviour.Classes
         public Monster(string name)
         {
             this.Name = name;
-            this.Stats = new CharacterStats(200, 100, 10, 10, 5, 5, 10, 50, 0, 0, 0);
+            this.Stats = new CharacterStats(
+                300, //HP 
+                30, //MP
+                30, //ATK
+                10, //DEF
+                5, //MAG ATK
+                5, //MAG DEF
+                10, //SPD
+                1.9, //FIRE R
+                -1.9, //ICE R
+                1, //THUNDER R
+                1 //WATER R
+                );
+            this.Lives = (int)Stats.HP;
         }
 
         public void LivesCheck()
         {
-            if (Stats.HP > 25)
+            if (Lives < (Stats.HP * 0.75))
             {
-                AttackBehavior = new ScorpionAttackBehavior();
+                AttackBehavior = new SpecialAttackBehavior();
             }
         }
     }

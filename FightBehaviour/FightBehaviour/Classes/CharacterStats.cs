@@ -8,19 +8,19 @@ namespace FightBehaviour.Classes
 {
     class CharacterStats
     {
-        public int HP { get; set; }
-        public int MP { get; set; }
-        public int ATK { get; set; }
-        public int DEF { get; set; }
-        public int MAG_ATK { get; set; }
-        public int MAG_DEF { get; set; }
-        public int SPD { get; set; }
-        public int FIR_RES { get; set; }
-        public int ICE_RES { get; set; }
-        public int TND_RES { get; set; }
-        public int WAT_RES { get; set; }
+        public double HP { get; set; }
+        public double MP { get; set; }
+        public double ATK { get; set; }
+        public double DEF { get; set; }
+        public double MAG_ATK { get; set; }
+        public double MAG_DEF { get; set; }
+        public double SPD { get; set; }
+        public double FIR_RES { get; set; }
+        public double ICE_RES { get; set; }
+        public double TND_RES { get; set; }
+        public double WAT_RES { get; set; }
 
-        public CharacterStats(int hp = 0, int mp = 0, int atk = 0, int def = 0, int mag_atk = 0, int mag_def = 0, int spd = 0, int fir_res = 0, int ice_res = 0, int tnd_res = 0, int wat_res = 0)
+        public CharacterStats(double hp = 0, double mp = 0, double atk = 0, double def = 0, double mag_atk = 0, double mag_def = 0, double spd = 0, double fir_res = 0, double ice_res = 0, double tnd_res = 0, double wat_res = 0)
         {
             HP = hp;
             MP = mp;

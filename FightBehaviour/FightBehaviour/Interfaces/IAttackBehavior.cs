@@ -9,6 +9,6 @@ namespace FightBehaviour.Interfaces
     interface IAttackBehavior
     {
         string AttackName { get; set; }
-        void Attack(Classes.Character attacker, Classes.Character target);
+        int Attack(Classes.Character attacker, Classes.Character target);
     }
 }

@@ -11,19 +11,26 @@ namespace FightBehaviour.Classes
     class Character
     {
         public string Name;
+        public int Lives;
         public CharacterStats Stats;
-        private IAttackBehavior _attackBehavior = new BasicAttackBehavior();
+        private IAttackBehavior attackBehavior = new BasicAttackBehavior();
 
         public IAttackBehavior AttackBehavior
         {
-            get { return _attackBehavior; }
-            set { _attackBehavior = value; }
+            get { return attackBehavior; }
+            set { attackBehavior = value; }
         }
 
-        public void AttackCommand(Character attacker, Character target)
+        public int AttackCommand(Character attacker, Character target)
         {
-            AttackBehavior.Attack(attacker, target);
+            return AttackBehavior.Attack(attacker, target);
         }
+
+        public override string ToString()
+        {
+            return this.Name;
+        }
+
 
     }
 }

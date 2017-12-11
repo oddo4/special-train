@@ -54,10 +54,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Behaviors\FireMagicBehavior.cs" />
+    <Compile Include="Behaviors\IceMagicBehavior.cs" />
     <Compile Include="Classes\Character.cs" />
     <Compile Include="Classes\CharacterStats.cs" />
     <Compile Include="Classes\Monster.cs" />
-    <Compile Include="Behaviors\ScorpionAttackBehavior.cs" />
+    <Compile Include="Behaviors\SpecialAttackBehavior.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

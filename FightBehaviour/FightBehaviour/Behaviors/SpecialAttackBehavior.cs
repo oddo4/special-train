@@ -7,9 +7,9 @@ using FightBehaviour.Interfaces;
 
 namespace FightBehaviour.Behaviors
 {
-    class BasicAttackBehavior : IAttackBehavior
+    class SpecialAttackBehavior : IAttackBehavior
     {
-        private string attackName = "Attack";
+        private string attackName = "Scorpion Tail";
 
         public string AttackName
         {
@@ -25,7 +25,7 @@ namespace FightBehaviour.Behaviors
 
         public int Attack(Classes.Character attacker, Classes.Character target)
         {
-            int damage = (int)Math.Floor(attacker.Stats.ATK) - (int)Math.Floor(target.Stats.DEF);
+            int damage = ((int)Math.Floor(attacker.Stats.ATK) * 2) - (int)Math.Floor(target.Stats.DEF);
 
             if (damage < 0)
             {
@@ -40,6 +40,16 @@ namespace FightBehaviour.Behaviors
             {
                 target.Lives -= damage;
             }
+
+            if (attacker.Stats.MP - 10 < 0)
+            {
+                attacker.Stats.MP = 0;
+                attacker.AttackBehavior = new BasicAttackBehavior();
+            }
+             else
+            {
+                attacker.Stats.MP -= 10;
+            } 
 
             return damage;
         }
