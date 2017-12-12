@@ -1,0 +1,23 @@
+﻿<Window x:Class="sqlwpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:sqlwpf"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <ListView x:Name="listTest" HorizontalAlignment="Left" Height="179" VerticalAlignment="Top" Margin="10,10,0,0">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Výrobce" DisplayMemberBinding="{Binding Manufacture}"/>
+                    <GridViewColumn Header="Název" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Stav" DisplayMemberBinding="{Binding State}"/>
+                    <GridViewColumn Header="Výkon" DisplayMemberBinding="{Binding Power}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button x:Name="btnDelete" Content="Smazat" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="75" Click="btnDelete_Click" Margin="10,0,0,10"/>
+
+    </Grid>
+</Window>
