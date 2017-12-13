@@ -22,26 +22,71 @@ namespace sqlwpf
     public partial class MainWindow : Window
     {
         TodoItemDatabase database = new TodoItemDatabase("filedata - kopie.db3");
+        List<string> manufactureList = new List<string>() { "Škoda", "Audi", "BMW" };
+        List<TodoItem> carsList = new List<TodoItem>();
 
         public MainWindow()
         {
             InitializeComponent();
+            CreateManufactureList();
 
-            /*TodoItem car = new TodoItem() { Name = "Nazev1", Power = 10, Manufacture = "Vyrobce5", State = "Ojeté" };
+            /*TodoItem car = new TodoItem() { Name = "Nazev1", Power = 10, Manufacture = "BMW", State = "Nové" };
             database.SaveItemAsync(car);*/
 
-            listTest.ItemsSource = database.GetItemsAsync().Result.OrderBy(c => c.Manufacture).ToList();
         }
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            if (listTest.SelectedIndex >= 0)
+            if (listCars.SelectedIndex >= 0)
             {
-                var list = database.GetItemsAsync().Result.OrderBy(c => c.Manufacture).ToList();
-                database.DeleteItemAsync(list[listTest.SelectedIndex]);
-                listTest.ItemsSource = null;
-                listTest.ItemsSource = database.GetItemsAsync().Result.OrderBy(c => c.Manufacture).ToList();
+                carsList.RemoveAt(listCars.SelectedIndex);
+                database.DeleteItemAsync((TodoItem)listCars.SelectedItem);
+                listCars.ItemsSource = null;
+                CreateCarsList();
             }
         }
+
+        private void Manufacture_Selected(object sender, SelectionChangedEventArgs e)
+        {
+            CreateCarsList();
+        }
+
+        private void Car_Selected(object sender, SelectionChangedEventArgs e)
+        {
+            ShowCarInfo();
+        }
+
+        private void ShowCarInfo()
+        {
+            if (listCars.SelectedItem != null)
+            {
+                TodoItem car = (TodoItem)listCars.SelectedItem;
+                labelManufacture.Content = car.Manufacture;
+                labelName.Content = car.Name;
+                //labelState.Content = car.State;
+                labelPower.Content = car.Power;
+            }
+            else
+            {
+                labelManufacture.Content = null;
+                labelName.Content = null;
+                //labelState.Content = null;
+                labelPower.Content = null;
+            }
+        }
+
+        private void CreateCarsList()
+        {
+            carsList = database.GetItemsManufactureAsync(listManufactures.SelectedItem.ToString()).Result;
+            listCars.ItemsSource = carsList;
+        }
+
+        private void CreateManufactureList()
+        {
+            manufactureList = manufactureList.OrderBy(c => c).ToList();
+
+            listManufactures.ItemsSource = manufactureList;
+        }
+
     }
 }

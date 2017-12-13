@@ -19,13 +19,13 @@ namespace sqlwpf
         {
             return database.Table<TodoItem>().ToListAsync();
         }
-        public Task<List<TodoItem>> GetItemsNotDoneAsync()
+        public Task<List<TodoItem>> GetItemsManufactureAsync(string m)
         {
-            return database.QueryAsync<TodoItem>("SELECT * FROM [TodoItem] WHERE [Done] = 0"); // klasické SQL
+            return database.QueryAsync<TodoItem>("SELECT * FROM [TodoItem] WHERE [Manufacture] = '" + m + "'"); // klasické SQL
         }
-        public Task<TodoItem> GetItemAsync(int id)
+        public Task<TodoItem> GetItemAsync(string m)
         {
-            return database.Table<TodoItem>().Where(i => i.ID == id).FirstOrDefaultAsync(); // LINQ syntaxe
+            return database.Table<TodoItem>().Where(i => i.Manufacture == m).FirstOrDefaultAsync(); // LINQ syntaxe
         }
         public Task<int> SaveItemAsync(TodoItem item)
         {
