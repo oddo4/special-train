@@ -34,6 +34,10 @@
                     <Rectangle Fill="DeepSkyBlue" HorizontalAlignment="Center" Height="40" Stroke="DarkBlue" VerticalAlignment="Center" Width="80"/>
                     <Label Content="Item 2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="8"/>
                 </Grid>
+                <Grid Canvas.Top="80" Canvas.Left="0" MouseMove="shape_MouseMove" MouseLeftButtonDown="shape_MouseLeftButtonDown" MouseLeftButtonUp="shape_MouseLeftButtonUp">
+                    <Rectangle Fill="Green" HorizontalAlignment="Center" Height="80" Stroke="DarkGreen" VerticalAlignment="Center" Width="80"/>
+                    <Label Content="Item 3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="8"/>
+                </Grid>
             </Canvas>
         </Grid>
     </Grid>
