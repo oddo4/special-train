@@ -30,15 +30,10 @@
                     <Rectangle Fill="OrangeRed" HorizontalAlignment="Center" Height="40" Stroke="DarkRed" VerticalAlignment="Center" Width="40"/>
                     <Label Content="Item 1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="8"/>
                 </Grid>
-                <Grid Canvas.Top="40" Canvas.Left="0" MouseMove="shape_MouseMove" MouseLeftButtonDown="shape_MouseLeftButtonDown" MouseLeftButtonUp="shape_MouseLeftButtonUp">
-                    <Rectangle Fill="DeepSkyBlue" HorizontalAlignment="Center" Height="40" Stroke="DarkBlue" VerticalAlignment="Center" Width="80"/>
-                    <Label Content="Item 2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="8"/>
-                </Grid>
-                <Grid Canvas.Top="80" Canvas.Left="0" MouseMove="shape_MouseMove" MouseLeftButtonDown="shape_MouseLeftButtonDown" MouseLeftButtonUp="shape_MouseLeftButtonUp">
-                    <Rectangle Fill="Green" HorizontalAlignment="Center" Height="80" Stroke="DarkGreen" VerticalAlignment="Center" Width="80"/>
-                    <Label Content="Item 3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="8"/>
-                </Grid>
             </Canvas>
         </Grid>
+        <TextBox x:Name="tboxHeight" HorizontalAlignment="Left" Height="23" Margin="5,0,0,80" TextWrapping="Wrap" Text="" VerticalAlignment="Bottom" Width="100"/>
+        <TextBox x:Name="tboxWidth" HorizontalAlignment="Left" Height="23" Margin="5,0,0,50" TextWrapping="Wrap" Text="" VerticalAlignment="Bottom" Width="100"/>
+        <Button x:Name="lblCreate" Content="Add Item" HorizontalAlignment="Left" Margin="5,0,0,20" VerticalAlignment="Bottom" Width="100" Click="lblCreate_Click"/>
     </Grid>
 </Window>

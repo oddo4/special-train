@@ -20,12 +20,7 @@ namespace Inventory
     /// </summary>
     public partial class MainWindow : Window
     {
-        FrameworkElement source = null;
-        Point begpos;
-        bool captured = false;
-        bool place = false;
-        double xShape, yShape, xCanvas, yCanvas;
-        Rectangle rec = null;
+        ItemPosition item = new ItemPosition();
         public MainWindow()
         {
             InitializeComponent();
@@ -33,86 +28,18 @@ namespace Inventory
         }
         private void shape_MouseLeftButtonDown(object sender, MouseEventArgs e)
         {
-            var gr = (Grid)sender;
-            var ch = gr.Children[0];
-            rec = (Rectangle)ch;
-            Canvas.SetZIndex(gr, 100);
-            begpos = Mouse.GetPosition(canvas);
-            source = (FrameworkElement)sender;
-            Canvas.SetLeft(source, begpos.X + 5);
-            Canvas.SetTop(source, begpos.Y + 5);
-            xShape = Canvas.GetLeft(source);
-            yShape = Canvas.GetTop(source);
-            xCanvas = e.GetPosition(canvas).X;
-            yCanvas = e.GetPosition(canvas).Y;
-            rec.Opacity = 0.75;
-            Mouse.Capture(source);
-            captured = true;
+            item = new ItemPosition();
+            item.ItemMouseDown(sender, canvas, e);
 
             //writeData.Content = source.Name;
         }
         private void shape_MouseMove(object sender, MouseEventArgs e)
         {
-            if (captured)
-            {
-                double x = e.GetPosition(canvas).X;
-                double y = e.GetPosition(canvas).Y;
-                xShape += x - xCanvas;
-                Canvas.SetLeft(source, xShape);
-                xCanvas = x;
-                yShape += y - yCanvas;
-                Canvas.SetTop(source, yShape);
-                yCanvas = y;
-
-            }
+            item.ItemMove(canvas, e);
         }
         private void shape_MouseLeftButtonUp(object sender, MouseEventArgs e)
         {
-            Mouse.Capture(null);
-            captured = false;
-            var pos = Mouse.GetPosition(canvas);
-            if (pos.X <= (inventory.RowDefinitions.Count() * 40) && pos.X >= 0 && pos.Y <= (inventory.ColumnDefinitions.Count() * 40) && pos.Y >= 0)
-            {
-                SetPositionGrid((Grid)sender, pos.X, pos.Y, rec.ActualWidth, rec.ActualHeight);
-            }
-            else
-            {
-                SetPositionGrid((Grid)sender, begpos.X, begpos.Y, rec.ActualWidth, rec.ActualHeight);
-            }
-        }
-
-        private void SetPositionGrid(Grid el, double posX, double posY, double width, double height)
-        {
-            for (int y = 0; y < inventory.ColumnDefinitions.Count; y++)
-            {
-                int x = 0;
-                for (int j = 0; j < inventory.RowDefinitions.Count; j++)
-                {
-                    if (posX > j * 40 && posX < (j + 1) * 40)
-                    {
-                        x = j;
-                        break;
-                    }
-                }
-
-                if (posY > y * 40 && posY < (y + 1) * 40)
-                {
-                    if (x > (inventory.RowDefinitions.Count / 2)-1)
-                    {
-                        x = x * (40 * ((int)width / 40) - 1);
-                    }
-                    if (y > (inventory.ColumnDefinitions.Count / 2) - 1)
-                    {
-                        y = y * (40 * ((int)width / 40) - 1);
-                    }
-                    test.Content = x + ", " + y + "; " + begpos.X + ", " + begpos.Y + "; " + posX + ", " + posY;
-                    Canvas.SetLeft(el, x);
-                    Canvas.SetTop(el, y);
-                    rec.Opacity = 1;
-                    Canvas.SetZIndex(el, 0);
-                    break;
-                }
-            }
+            item.ItemMouseUp(inventory, sender, canvas);
         }
 
         private void GridBorder()
@@ -130,6 +57,26 @@ namespace Inventory
                     Grid.SetColumn(border, i);
                 }
             }
+        }
+
+        private void CreateItem(int H, int W)
+        {
+            Label label = new Label() { Content = "New Item", HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, FontSize = 8 };
+            Rectangle rectangle = new Rectangle() { Height = 40 * H, Width = 40 * W, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Fill = Brushes.AliceBlue, Stroke = Brushes.DarkBlue };
+            Grid grid = new Grid();
+            grid.MouseLeftButtonDown += shape_MouseLeftButtonDown;
+            grid.MouseMove += shape_MouseMove;
+            grid.MouseLeftButtonUp += shape_MouseLeftButtonUp;
+            Canvas.SetLeft(grid, 0);
+            Canvas.SetTop(grid, 0);
+            grid.Children.Add(rectangle);
+            grid.Children.Add(label);
+            canvas.Children.Add(grid);
+        }
+
+        private void lblCreate_Click(object sender, RoutedEventArgs e)
+        {
+            CreateItem(int.Parse(tboxHeight.Text), int.Parse(tboxWidth.Text));
         }
     }
 }
