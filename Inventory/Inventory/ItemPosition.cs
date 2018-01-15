@@ -12,30 +12,32 @@ namespace Inventory
 {
     class ItemPosition
     {
+        public ItemData itemData = new ItemData();
         public FrameworkElement source = null;
-        public double Width = 0;
-        public double Height = 0;
         public Point BegPos { get; set; }
         public bool Captured = false;
-        public double xShape, yShape, xCanvas, yCanvas;
-        public Rectangle Rectangle = null;
+        public double XShape, YShape, XCanvas, YCanvas;
+        public Rectangle rect;
 
-        public void ItemMouseDown(object sender, Canvas canvas, MouseEventArgs e)
+        public void ItemMouseDown(object sender, Canvas canvas, Grid inventory, MouseEventArgs e, List<List<int>> gridList)
         {
             var gr = (Grid)sender;
             var ch = gr.Children[0];
-            Rectangle = (Rectangle)ch;
+            rect = (Rectangle)ch;
+            itemData.Width = (int)rect.ActualWidth;
+            itemData.Height = (int)rect.ActualHeight;
             Canvas.SetZIndex(gr, 100);
             BegPos = Mouse.GetPosition(canvas);
             source = (FrameworkElement)sender;
-            Canvas.SetLeft(source, BegPos.X + 5);
-            Canvas.SetTop(source, BegPos.Y + 5);
-            xShape = Canvas.GetLeft(source);
-            yShape = Canvas.GetTop(source);
-            xCanvas = e.GetPosition(canvas).X;
-            yCanvas = e.GetPosition(canvas).Y;
-            Rectangle.Opacity = 0.75;
+            Canvas.SetLeft(source, BegPos.X - 10);
+            Canvas.SetTop(source, BegPos.Y - 10);
+            XShape = Canvas.GetLeft(source);
+            YShape = Canvas.GetTop(source);
+            XCanvas = e.GetPosition(canvas).X;
+            YCanvas = e.GetPosition(canvas).Y;
+            rect.Opacity = 0.60;
             Mouse.Capture(source);
+            changeGrid(itemData.XSize, itemData.YSize, 0, gridList, itemData.Width, itemData.Height);
             Captured = true;
         }
 
@@ -45,42 +47,42 @@ namespace Inventory
             {
                 double x = e.GetPosition(canvas).X;
                 double y = e.GetPosition(canvas).Y;
-                xShape += x - xCanvas;
-                Canvas.SetLeft(source, xShape);
-                xCanvas = x;
-                yShape += y - yCanvas;
-                Canvas.SetTop(source, yShape);
-                yCanvas = y;
+                XShape += x - XCanvas;
+                Canvas.SetLeft(source, XShape);
+                XCanvas = x;
+                YShape += y - YCanvas;
+                Canvas.SetTop(source, YShape);
+                YCanvas = y;
             }
         }
 
-        public void ItemMouseUp(Grid inventory, object sender, Canvas canvas)
+        public void ItemMouseUp(object sender, Canvas canvas, Grid inventory, List<List<int>> gridList)
         {
             Mouse.Capture(null);
             Captured = false;
             var pos = Mouse.GetPosition(canvas);
-            if (pos.X <= (inventory.RowDefinitions.Count() * 40) && pos.X >= 0 && pos.Y <= (inventory.ColumnDefinitions.Count() * 40) && pos.Y >= 0)
+            if (pos.X <= (inventory.RowDefinitions.Count() * 30) && pos.X >= 0 && pos.Y <= (inventory.ColumnDefinitions.Count() * 30) && pos.Y >= 0)
             {
-                SetPositionOnGrid((Grid)sender, inventory, pos.X, pos.Y, Rectangle.ActualWidth, Rectangle.ActualHeight);
+                SetPositionOnGrid((Grid)sender, inventory, itemData, gridList, pos.X, pos.Y, itemData.Width, itemData.Height);
             }
             else
             {
-                SetPositionOnGrid((Grid)sender, inventory, BegPos.X, BegPos.Y, Rectangle.ActualWidth, Rectangle.ActualHeight);
+                SetPositionOnGrid((Grid)sender, inventory, itemData, gridList, BegPos.X, BegPos.Y, itemData.Width, itemData.Height);
             }
         }
 
-        public bool SetPositionOnGrid(Grid item, Grid inventory, double posX, double posY, double width, double height)
+        public bool SetPositionOnGrid(Grid item, Grid inventory, ItemData itemData, List<List<int>> gridList, double posX, double posY, double width, double height)
         {
             for (int y = 0; y < inventory.ColumnDefinitions.Count; y++)
             {
                 int x = 0;
                 for (int j = 0; j < inventory.RowDefinitions.Count; j++)
                 {
-                    if (posX > j * 40 && posX < (j + 1) * 40)
+                    if (posX >= j * 30 && posX < (j + 1) * 30)
                     {
-                        if (width / 40 > 1 && j + (width / 40) > inventory.RowDefinitions.Count - 1)
+                        if (width / 30 > 1 && j + (width / 30) > inventory.RowDefinitions.Count - 1)
                         {
-                            x = inventory.RowDefinitions.Count - ((int)width / 40);
+                            x = inventory.RowDefinitions.Count - ((int)width / 30);
                         }
                         else
                         {
@@ -90,22 +92,54 @@ namespace Inventory
                     }
                 }
 
-                if (posY > y * 40 && posY < (y + 1) * 40)
+                if (posY >= y * 30 && posY < (y + 1) * 30)
                 {
-                    if (height / 40 > 1 && y + (height / 40) > inventory.ColumnDefinitions.Count - 1)
+                    if (height / 30 > 1 && y + (height / 30) > inventory.ColumnDefinitions.Count - 1)
                     {
-                        y = inventory.ColumnDefinitions.Count - ((int)height / 40);
+                        y = inventory.ColumnDefinitions.Count - ((int)height / 30);
                     }
-
-                    Canvas.SetLeft(item, x * 40);
-                    Canvas.SetTop(item, y * 40);
-                    Rectangle.Opacity = 0.90;
-                    Canvas.SetZIndex(item, 0);
+                    checkGrid(x, y, gridList, item);
+                    rect.Opacity = 1;
                     return true;
                 }
             }
 
             return false;
+        }
+
+        private bool checkGrid(int x, int y, List<List<int>> gridList, Grid item)
+        {
+            for (int i = x; i < x + (itemData.Width / 30); i++)
+            {
+                for (int j = y; j < y + (itemData.Height / 30); j++)
+                {
+                    if (gridList[i][j] == 1)
+                    {
+                        Canvas.SetLeft(item, itemData.XSize * 30);
+                        Canvas.SetTop(item, itemData.YSize * 30);
+                        changeGrid(itemData.XSize, itemData.YSize, 1, gridList, itemData.Width, itemData.Height);
+                        return true;
+                    }
+                }
+            }
+
+            Canvas.SetLeft(item, x * 30);
+            Canvas.SetTop(item, y * 30);
+            itemData.XSize = x;
+            itemData.YSize = y;
+            changeGrid(x, y, 1, gridList, itemData.Width, itemData.Height);
+            return false;
+        }
+
+        public void changeGrid(int posX, int posY, int value, List<List<int>> gridList, int width, int height)
+        {
+            for (int i = posX; i < posX + (width / 30); i++)
+            {
+                for (int j = posY; j < posY + (height / 30); j++)
+                {
+                    gridList[i][j] = value;
+                }
+            }
         }
     }
 }

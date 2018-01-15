@@ -5,35 +5,52 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Inventory"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="480" Width="640">
     <Grid>
         <Label x:Name="test" Content="0" HorizontalAlignment="Right"></Label>
-        <Grid x:Name="inventory" Canvas.Top="0" Canvas.Left="0" Background="AliceBlue" Height="240" Width="240">
+        <Label x:Name="test2" Content="0" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Label>
+        <Grid x:Name="inventory" Canvas.Top="0" Canvas.Left="0" Background="AliceBlue" Height="360" Width="360">
             <Grid.RowDefinitions>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="40"/>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="30"/>
             </Grid.ColumnDefinitions>
             <Canvas x:Name="canvas" Panel.ZIndex="10">
+                <!--
                 <Grid Canvas.Top="0" Canvas.Left="0" MouseMove="shape_MouseMove" MouseLeftButtonDown="shape_MouseLeftButtonDown" MouseLeftButtonUp="shape_MouseLeftButtonUp">
-                    <Rectangle Fill="OrangeRed" HorizontalAlignment="Center" Height="40" Stroke="DarkRed" VerticalAlignment="Center" Width="40"/>
+                    <Rectangle Fill="OrangeRed" HorizontalAlignment="Center" Height="30" Stroke="DarkRed" VerticalAlignment="Center" Width="30"/>
                     <Label Content="Item 1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="8"/>
                 </Grid>
+                -->
             </Canvas>
         </Grid>
-        <TextBox x:Name="tboxHeight" HorizontalAlignment="Left" Height="23" Margin="5,0,0,80" TextWrapping="Wrap" Text="" VerticalAlignment="Bottom" Width="100"/>
-        <TextBox x:Name="tboxWidth" HorizontalAlignment="Left" Height="23" Margin="5,0,0,50" TextWrapping="Wrap" Text="" VerticalAlignment="Bottom" Width="100"/>
-        <Button x:Name="lblCreate" Content="Add Item" HorizontalAlignment="Left" Margin="5,0,0,20" VerticalAlignment="Bottom" Width="100" Click="lblCreate_Click"/>
+        <TextBox x:Name="tboxName" HorizontalAlignment="Left" Height="23" Margin="5,0,0,110" TextWrapping="Wrap" Text="" VerticalAlignment="Bottom" Width="60"/>
+        <TextBox x:Name="tboxHeight" HorizontalAlignment="Left" Height="23" Margin="5,0,0,80" TextWrapping="Wrap" Text="" VerticalAlignment="Bottom" Width="60"/>
+        <TextBox x:Name="tboxWidth" HorizontalAlignment="Left" Height="23" Margin="5,0,0,50" TextWrapping="Wrap" Text="" VerticalAlignment="Bottom" Width="60"/>
+        <Button x:Name="btnCreate" Content="Add Item" HorizontalAlignment="Left" Margin="5,0,0,20" VerticalAlignment="Bottom" Width="60" Click="btnCreate_Click"/>
+        <Button x:Name="btnSave" Content="Save DB" HorizontalAlignment="Left" Margin="70,0,0,20" VerticalAlignment="Bottom" Width="60" Click="btnSave_Click"/>
     </Grid>
 </Window>
