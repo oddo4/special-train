@@ -103,6 +103,7 @@ namespace Inventory
             ItemData newItem = new ItemData(name, posX, posY, H * 30, W * 30);
             itemsList.Add(newItem);
             itemPosition.rect = rectangle;
+            itemPosition.itemData = newItem;
             itemPosition.SetPositionOnGrid(grid, inventory, newItem, gridList, posX * 30, posY * 30, W * 30, H * 30);
             itemPosition.changeGrid(newItem.XSize, newItem.YSize, 1, gridList, newItem.Width, newItem.Height);
             gridTest();
