@@ -3,18 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace InventoryAbstract
 {
-    public abstract class AItem
+    public class ItemDescription
     {
         public string Name { get; set; }
-        public Point Pos { get; set; }
-        public AItemType ItemStructure { get; set; }
-        public void ChangePos()
+        public ItemDescription(string name)
         {
-
+            this.Name = name;
         }
     }
 }

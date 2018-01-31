@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace InventoryAbstract
 {
-    public abstract class AConsumable : AItem
+    interface IEquipable
     {
-
+        string Equip();
     }
 }

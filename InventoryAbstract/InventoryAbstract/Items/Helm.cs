@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace InventoryAbstract
 {
-    public interface ICount
+    class Helm : AArmor, IUseable
     {
-        int CurrentCount { get; set; }
-        int MaxCount { get; set; }
+        public string Use()
+        {
+            return "";
+        }
+        
     }
 }

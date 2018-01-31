@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace InventoryAbstract
 {
-    public abstract class AArmor : AItemType
+    class ChestArmor : AArmor, IUseable
     {
-        public int Defense { get; set; }
-        public abstract string Upgrade();
+        public string Use()
+        {
+            return "";
+        }
     }
 }

@@ -20,14 +20,37 @@ namespace InventoryAbstract
     /// </summary>
     public partial class MainWindow : Window
     {
-        List<AItem> allItems = new List<AItem>();
-        AItem selectedItem = null;
+        List<Item> allItems = new List<Item>();
+        Item selectedItem = null;
         public MainWindow()
         {
             InitializeComponent();
-            AItem item = new Helm("Helma");
+            GridBorder();
+            Item item = new Item();
+            item.ItemType = new Helm();
+            item.ItemDescription = new ItemDescription("Helm");
+            item.ItemPosition = new ItemPosition(new Point(0, 0), new ItemSize(1, 1));
+
+            Item item2 = new Item();
+            item2.ItemType = new ShortRange();
+            item2.ItemDescription = new ItemDescription("Sword");
+            item2.ItemPosition = new ItemPosition(new Point(1, 0), new ItemSize(1, 1));
+
+            Item item3 = new Item();
+            item3.ItemType = new Food();
+            item3.ItemDescription = new ItemDescription("Cheese");
+            item3.ItemPosition = new ItemPosition(new Point(2, 0), new ItemSize(1, 1));
+
+            ((Food)item3.ItemType).MaxQuantity = 10;
+            ((Food)item3.ItemType).Quantity = 5;
+
             allItems.Add(item);
-            CreateItem(item);
+            allItems.Add(item2);
+            allItems.Add(item3);
+            foreach (Item c in allItems)
+            {
+                CreateItem(c);
+            }
         }
         private void GridBorder()
         {
@@ -45,37 +68,45 @@ namespace InventoryAbstract
                 }
             }
         }
-        private void CreateItem(AItem item)
+        private void CreateItem(Item item)
         {
-            Label label = new Label() { Content = item.Name, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, FontSize = 8 };
-            Label count = new Label() { Content = item.Count, HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Bottom, FontSize = 6 };
-            Rectangle rectangle = new Rectangle() { Height = 40, Width = 40, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Fill = Brushes.OrangeRed, Stroke = Brushes.DarkRed };
             Grid grid = new Grid();
+            Rectangle rectangle = new Rectangle() { Height = (item.ItemPosition.Size.H * 60), Width = (item.ItemPosition.Size.W * 60), HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Fill = Brushes.OrangeRed, Stroke = Brushes.DarkRed };
             grid.Children.Add(rectangle);
+            Label label = new Label() { Content = item.ItemDescription.Name, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 };
             grid.Children.Add(label);
-            grid.Children.Add(count);
+            if (item.ItemType is AConsumable)
+            {
+                Label count = new Label() { Content = ((Food)item.ItemType).Quantity, HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Bottom, FontSize = 15 };
+                grid.Children.Add(count);
+            }
             grid.MouseLeftButtonDown += selectItem;
-            Grid.SetRow(grid, (int)item.Pos.X);
-            Grid.SetColumn(grid, (int)item.Pos.Y);
+            Grid.SetRow(grid, (int)item.ItemPosition.Pos.X);
+            Grid.SetColumn(grid, (int)item.ItemPosition.Pos.Y);
             inventory.Children.Add(grid);
         }
         private void selectItem(object sender, MouseEventArgs e)
         {
             var grid = (Grid)sender;
             Point pos = new Point(Grid.GetRow(grid), Grid.GetColumn(grid));
-            foreach (AItem item in allItems)
+            foreach (Item item in allItems)
             {
-                if (pos == item.Pos)
+                if (pos == item.ItemPosition.Pos)
                 {
                     selectedItem = item;
                 }
             }
 
-
+            info.Content = "Selected: " + selectedItem.ItemDescription.Name;
         }
         private void showInfo()
         {
             
+        }
+
+        private void addStack_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

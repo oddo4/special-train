@@ -54,23 +54,32 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AConsumable.cs" />
-    <Compile Include="AItemType.cs" />
-    <Compile Include="ChestArmor.cs" />
-    <Compile Include="ICount.cs" />
-    <Compile Include="ShortRange.cs" />
+    <Compile Include="Interface\IDropable.cs" />
+    <Compile Include="Interface\IEquipable.cs" />
+    <Compile Include="Interface\IUseable.cs" />
+    <Compile Include="Items\Boots.cs" />
+    <Compile Include="ItemTypes\AConsumable.cs" />
+    <Compile Include="Classes\ItemDescription.cs" />
+    <Compile Include="Classes\ItemPosition.cs" />
+    <Compile Include="Abstract\AItemType.cs" />
+    <Compile Include="Items\ChestArmor.cs" />
+    <Compile Include="Items\Food.cs" />
+    <Compile Include="Interface\IStackable.cs" />
+    <Compile Include="Classes\ItemSize.cs" />
+    <Compile Include="Interface\IUpgradeable.cs" />
+    <Compile Include="Items\ShortRange.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="AArmor.cs" />
-    <Compile Include="AItem.cs" />
+    <Compile Include="ItemTypes\AArmor.cs" />
+    <Compile Include="Classes\Item.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AWeapon.cs" />
-    <Compile Include="Helm.cs" />
+    <Compile Include="ItemTypes\AWeapon.cs" />
+    <Compile Include="Items\Helm.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

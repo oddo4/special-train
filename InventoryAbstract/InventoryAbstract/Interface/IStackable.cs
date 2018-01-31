@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace InventoryAbstract
 {
-    public abstract class AWeapon : AItem
+    public interface IStackable
     {
-        public int Attack { get; set; }
+        int Quantity { get; set; }
+        int MaxQuantity { get; set; }
+        bool Count();
     }
 }

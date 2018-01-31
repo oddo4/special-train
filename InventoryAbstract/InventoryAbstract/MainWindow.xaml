@@ -7,24 +7,26 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="480" Width="640">
     <Grid>
-        <Grid x:Name="inventory" HorizontalAlignment="Left" Background="AliceBlue" Height="240" Width="240" Margin="20,0,0,0">
+        <Grid x:Name="inventory" HorizontalAlignment="Left" Background="AliceBlue" Height="360" Width="360" Margin="20,0,0,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="40"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="60"/>
             </Grid.ColumnDefinitions>
         </Grid>
         <Label x:Name="info" Content="Label" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,20,0"/>
+        <Button x:Name="addStack" Content="Add 20 Cheese" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="80" Margin="20,0,0,10" Click="addStack_Click"/>
+
     </Grid>
 </Window>

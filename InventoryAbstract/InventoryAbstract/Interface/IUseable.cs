@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace InventoryAbstract
 {
-    public abstract class AItemType
+    public interface IUseable
     {
-        public abstract string Use();
+        string Use();
     }
 }
