@@ -55,6 +55,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AConsumable.cs" />
+    <Compile Include="AItemType.cs" />
     <Compile Include="ChestArmor.cs" />
     <Compile Include="ICount.cs" />
     <Compile Include="ShortRange.cs" />

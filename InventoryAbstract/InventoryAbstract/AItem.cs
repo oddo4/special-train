@@ -11,5 +11,10 @@ namespace InventoryAbstract
     {
         public string Name { get; set; }
         public Point Pos { get; set; }
+        public AItemType ItemStructure { get; set; }
+        public void ChangePos()
+        {
+
+        }
     }
 }
