@@ -1,0 +1,36 @@
+﻿<Window x:Class="test_20180206.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:test_20180206"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <ListView x:Name="listViewCategories" HorizontalAlignment="Left" Height="150" Margin="10,10,0,0" VerticalAlignment="Top" Width="150" SelectionChanged="Categories_Selected">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Název" DisplayMemberBinding="{Binding Name}" Width="Auto"/>
+                    <GridViewColumn Header="Datum" DisplayMemberBinding="{Binding Date}" Width="Auto"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <ListView x:Name="listViewItems" HorizontalAlignment="Center" Height="150" Margin="0,10,0,0" VerticalAlignment="Top" Width="150" SelectionChanged="Items_Selected">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Název" DisplayMemberBinding="{Binding Name}" Width="Auto"/>
+                    <GridViewColumn Header="" DisplayMemberBinding="{Binding Name}" Width="Auto"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <ComboBox x:Name="cBoxItems" HorizontalAlignment="Right" VerticalAlignment="Top" Width="120" Margin="0,10,10,0" IsEnabled="False">
+        </ComboBox>
+        <Button x:Name="btnAddItem" Content="Přidat položku" HorizontalAlignment="Right" VerticalAlignment="Top" Width="90" Margin="0,37,24,0" Click="AddItem_Click" IsEnabled="False"/>
+        <Button x:Name="btnDeleteItem" Content="Odebrat položku" HorizontalAlignment="Center" VerticalAlignment="Top" Width="100" Margin="209,165,208,0" Click="DeleteItem_Click" IsEnabled="True"/>
+        <TextBox x:Name="txtAddCat" HorizontalAlignment="Left" Height="23" Margin="24,171,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <Button x:Name="btnAddCat" Content="Přidat seznam" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="38,199,0,0" Click="btnAddCat_Click" Visibility="Visible"/>
+        <Button x:Name="btnDeleteCat" Content="Odebrat seznam" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="38,224,0,0" Click="btnDeleteCat_Click"/>
+
+
+    </Grid>
+</Window>
