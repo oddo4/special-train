@@ -9,21 +9,36 @@
       Title="ListPage">
 
     <Grid Background="White">
-        <Button x:Name="btnGoBack" Content="Zpět" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Click="btnGoBack_Click" Margin="10,10,0,0"/>
-        <ListView x:Name="lViewItems" HorizontalAlignment="Left" Height="175" VerticalAlignment="Top" Width="140" Margin="10,35,0,0">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Název" DisplayMemberBinding="{Binding Name}" Width="Auto"/>
-                    <GridViewColumn Header="Částka" DisplayMemberBinding="{Binding Cost}" Width="Auto"/>
-                    <GridViewColumn Header="Datum" DisplayMemberBinding="{Binding DateSpent}" Width="Auto"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
-        <Button x:Name="btnDelItem" Content="Odstranit" HorizontalAlignment="Left" VerticalAlignment="Center" Width="60" Click="btnDelItem_Click" Margin="10,215,0,115"/>
-        <Button x:Name="btnEditItem" Content="Upravit" HorizontalAlignment="Left" VerticalAlignment="Center" Width="60" Click="btnEditItem_Click" Margin="10,240,0,90"/>
-        <TextBox x:Name="txtName" HorizontalAlignment="Center" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="239,35,166,0" Width="120" Height="22"/>
-        <TextBox x:Name="txtCost" HorizontalAlignment="Center" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="239,62,166,0" Width="120" Height="22"/>
-        <DatePicker x:Name="dpDate" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="239,89,166,0" Width="120"/>
-        <Button x:Name="btnAddItem" Content="Přidat" HorizontalAlignment="Center" VerticalAlignment="Top" Width="60" Click="btnAddItem_Click" Margin="270,118,195,0"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Button x:Name="btnGoBack" Content="Zpět" HorizontalAlignment="Left" VerticalAlignment="Center" Width="50" Click="btnGoBack_Click" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,0,0,0"/>
+        <TextBlock x:Name="txtBlkListName" HorizontalAlignment="Center" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,0"/>
+        <StackPanel Grid.Row="1" Grid.Column="0" Margin="10,0,0,0" HorizontalAlignment="Center">
+            <ListView x:Name="lViewItems" Height="200" Width="225" Grid.Row="1" Grid.Column="0" Margin="0,0,0,5">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Název" DisplayMemberBinding="{Binding Name}" Width="Auto"/>
+                        <GridViewColumn Header="Částka" DisplayMemberBinding="{Binding Cost}" Width="Auto"/>
+                        <GridViewColumn Header="Datum" DisplayMemberBinding="{Binding FormatedDate}" Width="Auto"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="btnDelItem" Content="Odstranit" Width="60" Click="btnDelItem_Click" Margin="0,0,5,0"/>
+                <Button x:Name="btnEditItem" Content="Upravit" Width="60" Click="btnEditItem_Click" Margin="0,0,5,0"/>
+                <Button x:Name="btnAddItem" Content="Přidat" Width="60" Click="btnAddItem_Click" Margin="0,0,0,0"/>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock TextWrapping="Wrap" Text="Celková suma: " Margin="0,0,0,0"/>
+            <TextBlock x:Name="txtBlkSum" TextWrapping="Wrap" Text="0" Margin="0,0,0,0"/>
+        </StackPanel>
     </Grid>
 </Page>

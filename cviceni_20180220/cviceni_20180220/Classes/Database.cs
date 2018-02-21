@@ -75,7 +75,7 @@ namespace cviceni_20180220
             var result = GetItemsListsAsync().Result;
             foreach (ItemsList i in result)
             {
-                if (5 == i.ID)
+                if (itemsList.ID == i.ID)
                 {
                     return database.UpdateAsync(itemsList);
                 }

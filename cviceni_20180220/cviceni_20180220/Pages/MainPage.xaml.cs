@@ -56,16 +56,24 @@ namespace cviceni_20180220
         {
             ItemsList newItemsList = new ItemsList();
             newItemsList.Name = txtListName.Text;
-
-            var idItemsList = App.Database.SaveItemsListAsync(newItemsList).Result;
-
-            newItemsList = App.Database.GetItemsList(idItemsList);
+            
+            if (App.Database.SaveItemsListAsync(newItemsList).Result != 0)
+            {
+                newItemsList = App.Database.GetItemsListsAsync().Result.Last();
+            }    
 
             NavigateToPage(new ListPage(newItemsList));
+
+            ResetElements();
+            GetItemsLists();
         }
         private void NavigateToPage(Page page)
         {
             NavigationService.Navigate(page);
+        }
+        private void ResetElements()
+        {
+            txtListName.Text = "";
         }
     }
 }

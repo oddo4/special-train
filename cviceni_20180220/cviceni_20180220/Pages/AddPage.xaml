@@ -10,9 +10,12 @@
 
     <Grid>
         <Button x:Name="btnGoBack" Content="Zpět" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Click="btnGoBack_Click" Margin="10,10,0,0"/>
-        <TextBox x:Name="txtName" HorizontalAlignment="Center" Height="22" TextWrapping="Wrap" Text="" VerticalAlignment="Center" Width="120" Margin="202,137,203,191"/>
-        <TextBox x:Name="txtCost" HorizontalAlignment="Center" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Center" Width="120" Margin="202,164,203,163"/>
-        <DatePicker x:Name="dpDate" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="202,192,203,134" Width="120"/>
-        <Button x:Name="btnSend" Content="Odeslat" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Margin="226,221,224,109" Click="btnSend_Click"/>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBox x:Name="txtName" HorizontalAlignment="Center" Height="22" TextWrapping="Wrap" Text="" VerticalAlignment="Center" Width="120" Margin="0,0,0,5"/>
+            <TextBox x:Name="txtCost" HorizontalAlignment="Center" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Center" Width="120" Margin="0,0,0,5"/>
+            <DatePicker x:Name="dpDate" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,5" Width="120"/>
+            <Button x:Name="btnSend" Content="Odeslat" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Margin="0,0,0,0" Click="btnSend_Click"/>
+        </StackPanel>
+        
     </Grid>
 </Page>

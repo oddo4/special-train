@@ -31,7 +31,9 @@ namespace cviceni_20180220
         {
             InitializeComponent();
             this.itemsList = itemsList;
+            txtBlkListName.Text = itemsList.Name;
             GetItems();
+            GetTotalSum();
         }
         private void GetItems()
         {
@@ -57,22 +59,19 @@ namespace cviceni_20180220
         }
         private void btnAddItem_Click(object sender, RoutedEventArgs e)
         {
-            Item newItem = new Item();
-            newItem.Name = txtName.Text;
-            newItem.Cost = int.Parse(txtCost.Text);
-            newItem.DateSpent = dpDate.SelectedDate.Value;
+            NavigationService.Navigate(new AddPage(itemsList.ID));
 
-            var idItem = App.Database.SaveItemAsync(newItem).Result;
+            GetTotalSum();
+        }
+        private void GetTotalSum()
+        {
+            int sum = 0;
+            foreach (Item item in items)
+            {
+                sum += item.Cost;
+            }
 
-            newItem.ID = idItem;
-
-            ItemTies newItemTies = new ItemTies();
-            newItemTies.IDItem = newItem.ID;
-            newItemTies.IDItemsList = itemsList.ID;
-
-            App.Database.SaveItemTiesAsync(newItemTies);
-
-            items.Add(newItem);
+            txtBlkSum.Text = sum.ToString() + " ,-";
         }
     }
 }

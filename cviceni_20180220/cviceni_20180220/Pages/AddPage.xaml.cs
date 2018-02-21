@@ -20,9 +20,17 @@ namespace cviceni_20180220
     /// </summary>
     public partial class AddPage : Page
     {
-        public AddPage()
+        int idItemsList;
+        Item item;
+        public AddPage(int id)
         {
             InitializeComponent();
+            idItemsList = id;
+        }
+        public AddPage(Item item)
+        {
+            InitializeComponent();
+            this.item = item;
         }
 
         private void btnSend_Click(object sender, RoutedEventArgs e)
@@ -33,6 +41,13 @@ namespace cviceni_20180220
             newItem.DateSpent = dpDate.SelectedDate.Value;
 
             App.Database.SaveItemAsync(newItem);
+
+            ItemTies newItemTies = new ItemTies();
+            newItemTies.IDItem = newItem.ID;
+            newItemTies.IDItemsList = idItemsList;
+
+            App.Database.SaveItemTiesAsync(newItemTies);
+
             NavigationService.GoBack();
         }
 

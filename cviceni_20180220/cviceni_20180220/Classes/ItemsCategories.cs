@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 
 namespace cviceni_20180220
 {
-    public class Item
+    public class ItemsCategories
     {
         [PrimaryKey, AutoIncrement]
         public int ID { get; set; }
-        public string Name { get; set; }
-        public int Cost { get; set; }
+        
     }
 }
