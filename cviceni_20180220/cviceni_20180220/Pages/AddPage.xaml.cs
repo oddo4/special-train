@@ -24,6 +24,7 @@ namespace cviceni_20180220
         int idItemsList;
         Item item;
         Transaction transaction;
+
         public AddPage()
         {
             InitializeComponent();
