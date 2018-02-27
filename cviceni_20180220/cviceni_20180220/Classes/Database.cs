@@ -137,6 +137,12 @@ namespace cviceni_20180220
         {
             database.Delete(item);
             database.Query<ItemTies>("DELETE FROM [ItemTies] WHERE [IDItem] = " + item.ID);
+            database.Query<Transaction>("DELETE FROM [Transaction] WHERE [IDItem] = " + item.ID);
+        }
+        public void DeleteItemsList(ItemsList itemsList)
+        {
+            database.Delete(itemsList);
+            database.Query<ItemTies>("DELETE FROM [ItemTies] WHERE [IDItemsList] = " + itemsList.ID);
         }
         public void DeleteTables()
         {

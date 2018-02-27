@@ -107,6 +107,16 @@ namespace cviceni_20180220
         {
             GetTotalYear();
             GetTotalMonth();
+            txtListName.Text = "";
+        }
+
+        private void btnDeleteList_Click(object sender, RoutedEventArgs e)
+        {
+            if (lViewLists.SelectedIndex != -1)
+            {
+                App.Database.DeleteItemsList(itemsLists[lViewLists.SelectedIndex]);
+                itemsLists.RemoveAt(lViewLists.SelectedIndex);
+            }
         }
     }
 }

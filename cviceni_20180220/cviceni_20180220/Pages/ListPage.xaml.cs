@@ -27,12 +27,14 @@ namespace cviceni_20180220
         {
             InitializeComponent();
             txtBlkListName.Text = "Všechny výdaje";
+            SwitchListNameElement(0);
         }
         public ListPage(ItemsList itemsList)
         {
             InitializeComponent();
             this.itemsList = itemsList;
-            txtBlkListName.Text = itemsList.Name;
+            txtListName.Text = itemsList.Name;
+            SwitchListNameElement(1);
         }
         private void GetItems()
         {
@@ -48,8 +50,13 @@ namespace cviceni_20180220
             }
             foreach (Item item in result)
             {
+                var trans = App.Database.GetTransaction(item.ID);
+                item.FormattedDate = trans.DateTransaction.ToString("dd/MM/yyyy");
                 items.Add(item);
             }
+
+            items = new ObservableCollection<Item>(items.OrderBy(c => c.FormattedDate));
+
             lViewItems.ItemsSource = items;
         }
         private void btnGoBack_Click(object sender, RoutedEventArgs e)
@@ -94,6 +101,29 @@ namespace cviceni_20180220
             if (items.Any())
             {
                 GetTotalSum();
+            }
+        }
+
+        private void btnSaveListName_Click(object sender, RoutedEventArgs e)
+        {
+            itemsList.Name = txtListName.Text;
+
+            App.Database.SaveItemsListAsync(itemsList);
+        }
+        private void SwitchListNameElement(int i)
+        {
+            switch (i)
+            {
+                case 0:
+                    EditListName.Visibility = Visibility.Hidden;
+                    txtBlkListName.Visibility = Visibility.Visible;
+                    break;
+                case 1:
+                    EditListName.Visibility = Visibility.Visible;
+                    txtBlkListName.Visibility = Visibility.Hidden;
+                    break;
+                default:
+                    break;
             }
         }
     }

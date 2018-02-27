@@ -62,11 +62,14 @@ namespace cviceni_20180220
 
             App.Database.SaveTransactionAsync(newTransaction);
 
-            ItemTies newItemTies = new ItemTies();
-            newItemTies.IDItem = newItem.ID;
-            newItemTies.IDItemsList = idItemsList;
+            if(idItemsList != 0)
+            {
+                ItemTies newItemTies = new ItemTies();
+                newItemTies.IDItem = newItem.ID;
+                newItemTies.IDItemsList = idItemsList;
 
-            App.Database.SaveItemTiesAsync(newItemTies);
+                App.Database.SaveItemTiesAsync(newItemTies);
+            }
 
             NavigationService.GoBack(); ;
         }
