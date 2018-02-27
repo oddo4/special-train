@@ -26,19 +26,26 @@ namespace cviceni_20180220
         public ListPage()
         {
             InitializeComponent();
+            txtBlkListName.Text = "Všechny výdaje";
         }
         public ListPage(ItemsList itemsList)
         {
             InitializeComponent();
             this.itemsList = itemsList;
             txtBlkListName.Text = itemsList.Name;
-            GetItems();
-            GetTotalSum();
         }
         private void GetItems()
         {
             items = new ObservableCollection<Item>();
-            var result = App.Database.GetItemsAsync(itemsList.ID);
+            List<Item> result;
+            if (itemsList != null)
+            {
+                result = App.Database.GetItemsAsync(itemsList.ID);
+            }
+            else
+            {
+                result = App.Database.GetItemAsync();
+            }
             foreach (Item item in result)
             {
                 items.Add(item);
@@ -51,11 +58,19 @@ namespace cviceni_20180220
         }
         private void btnDelItem_Click(object sender, RoutedEventArgs e)
         {
-
+            if (lViewItems.SelectedIndex != -1)
+            {
+                App.Database.DeleteItem(items[lViewItems.SelectedIndex]);
+                items.RemoveAt(lViewItems.SelectedIndex);
+                GetTotalSum();
+            }
         }
         private void btnEditItem_Click(object sender, RoutedEventArgs e)
         {
-
+            if (lViewItems.SelectedIndex != -1)
+            {
+                NavigationService.Navigate(new AddPage(items[lViewItems.SelectedIndex]));
+            }
         }
         private void btnAddItem_Click(object sender, RoutedEventArgs e)
         {
@@ -72,6 +87,14 @@ namespace cviceni_20180220
             }
 
             txtBlkSum.Text = sum.ToString() + " ,-";
+        }
+        private void UpdatePage(object sender, EventArgs e)
+        {
+            GetItems();
+            if (items.Any())
+            {
+                GetTotalSum();
+            }
         }
     }
 }

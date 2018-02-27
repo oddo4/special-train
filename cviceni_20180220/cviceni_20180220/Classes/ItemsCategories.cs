@@ -11,6 +11,6 @@ namespace cviceni_20180220
     {
         [PrimaryKey, AutoIncrement]
         public int ID { get; set; }
-        
+        public string Name { get; set; }
     }
 }

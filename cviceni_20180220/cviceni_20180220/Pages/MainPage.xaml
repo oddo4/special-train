@@ -6,20 +6,58 @@
       xmlns:local="clr-namespace:cviceni_20180220"
       mc:Ignorable="d" 
       d:DesignHeight="350" d:DesignWidth="525"
-      Title="MainPage">
+      Title="MainPage"
+      Loaded="UpdatePage">
 
     <Grid Background="White">
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Margin="10,10,0,0"/>
-        <ListView x:Name="lViewLists" HorizontalAlignment="Right" Height="175" VerticalAlignment="Top" Width="140" Margin="0,10,10,0">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Název" DisplayMemberBinding="{Binding Name}"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
-        <Button x:Name="btnAdd" Content="Přidat" Width="60" Height="20" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,10" Click="btnAdd_Click"/>
-        <Button x:Name="btnShowList" Content="Zobrazit seznam" Width="100" Height="20" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,30,140" Click="btnShowList_Click"/>
-        <TextBox x:Name="txtListName" HorizontalAlignment="Right" TextWrapping="Wrap" Text="" VerticalAlignment="Bottom" Margin="0,0,19,113" Width="120" Height="22"/>
-        <Button x:Name="btnCreateList" Content="Vytvořit seznam" Width="100" Height="20" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,30,88" Click="btnCreateList_Click"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="200"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Row="0" Grid.Column="0">
+                <TextBlock x:Name="txtBlkTotalMonth" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Měsíc" VerticalAlignment="Top" Margin="10,10,0,0"></TextBlock>
+                <TextBlock x:Name="txtBlkTotalYear" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Rok" VerticalAlignment="Top" Margin="10,10,0,0"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Grid.Column="0">
+                <Button x:Name="btnShowAll" Content="Všechny výdaje" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="0,10,0,0" Click="btnShowAll_Click"/>
+                <Button x:Name="btnAdd" Content="Přidat" Width="60" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,0" Click="btnAdd_Click"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="0" Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Row="0" Grid.Column="0">
+                <ListView x:Name="lViewLists" HorizontalAlignment="Center" Height="175" VerticalAlignment="Center" Width="140" Margin="0,10,0,0">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Název" DisplayMemberBinding="{Binding Name}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <Button x:Name="btnShowList" Content="Zobrazit seznam" Width="100" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnShowList_Click" Margin="0,10,0,0"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBox x:Name="txtListName" HorizontalAlignment="Center" TextWrapping="Wrap" Text="" VerticalAlignment="Center" Width="120" Height="22"/>
+                <Button x:Name="btnCreateList" Content="Vytvořit seznam" Width="100" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnCreateList_Click" Margin="0,10,0,0"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Page>

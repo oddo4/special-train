@@ -9,85 +9,140 @@ namespace cviceni_20180220
 {
     public class Database
     {
-        private SQLiteAsyncConnection database;
+        private SQLiteConnection database;
         public Database(string dbPath)
         {
-            database = new SQLiteAsyncConnection(dbPath);
-            database.CreateTableAsync<Item>().Wait();
-            database.CreateTableAsync<ItemsList>().Wait();
-            database.CreateTableAsync<ItemTies>().Wait();
+            database = new SQLiteConnection(dbPath);
+            database.CreateTable<Item>();
+            database.CreateTable<ItemsList>();
+            database.CreateTable<ItemTies>();
+            database.CreateTable<Transaction>();
         }
-        public Task<List<Item>> GetItemAsync()
+        public List<Item> GetItemAsync()
         {
-            return database.Table<Item>().ToListAsync();
+            return database.Table<Item>().ToList();
         }
         public List<Item> GetItemsAsync(int idList)
         {
             List<Item> list = new List<Item>();
-            var result = database.QueryAsync<ItemTies>("SELECT * FROM [ItemTies] WHERE [IDItemsList] = '" + idList + "'").Result;
+            var result = database.Query<ItemTies>("SELECT * FROM [ItemTies] WHERE [IDItemsList] = '" + idList + "'");
             foreach (ItemTies tie in result)
             {
-                var item = database.QueryAsync<Item>("SELECT * FROM [Item] WHERE [ID] = '" + tie.IDItem + "'").Result.FirstOrDefault();
+                var item = database.Query<Item>("SELECT * FROM [Item] WHERE [ID] = '" + tie.IDItem + "'").FirstOrDefault();
                 list.Add(item);
             }
             return list;
         }
-        public Task<List<ItemsList>> GetItemsListsAsync()
+        public List<Transaction> GetTransactionAsync()
         {
-            return database.Table<ItemsList>().ToListAsync();
+            return database.Table<Transaction>().ToList();
+        }
+        public List<Item> GetItemTotalYear()
+        {
+            List<Item> items = new List<Item>();
+            var transaction = GetTransactionAsync();
+            var today = DateTime.Today;
+            foreach (Transaction trans in transaction)
+            {
+                if (trans.DateTransaction.Year == today.Year /*&& trans.DateTransaction.Month <= today.Month*/)
+                {
+                    items.Add(database.Query<Item>("SELECT * FROM [Item] WHERE [ID] = '" + trans.IDItem + "'").FirstOrDefault());
+                }
+            }
+            return items;
+        }
+        public List<Item> GetItemTotalMonth()
+        {
+            List<Item> items = new List<Item>();
+            var transaction = GetTransactionAsync();
+            var today = DateTime.Today;
+            foreach (Transaction trans in transaction)
+            {
+                if (trans.DateTransaction.Year == today.Year && trans.DateTransaction.Month == today.Month /*&& trans.DateTransaction <= today*/)
+                {
+                    items.Add(database.Query<Item>("SELECT * FROM [Item] WHERE [ID] = '" + trans.IDItem + "'").FirstOrDefault());
+                }
+            }
+            return items;
+        }
+        public List<ItemsList> GetItemsListsAsync()
+        {
+            return database.Table<ItemsList>().ToList();
         }
         public ItemsList GetItemsList(int idItemsList)
         {
-            return database.QueryAsync<ItemsList>("SELECT * FROM [ItemsList] WHERE [ID] = '" + idItemsList + "'").Result.FirstOrDefault();
+            return database.Query<ItemsList>("SELECT * FROM [ItemsList] WHERE [ID] = '" + idItemsList + "'").FirstOrDefault();
         }
-        public Task<List<ItemTies>> GetItemTiesAsync()
+        public List<ItemTies> GetItemTiesAsync()
         {
-            return database.Table<ItemTies>().ToListAsync();
+            return database.Table<ItemTies>().ToList();
         }
-        public Task<int> SaveItemAsync(Item item)
+        public Transaction GetTransaction(int idItem)
         {
-            var result = GetItemAsync().Result;
+            return database.Query<Transaction>("SELECT * FROM [Transaction] WHERE [IDItem] = '" + idItem + "'").FirstOrDefault();
+        }
+        public int SaveItemAsync(Item item)
+        {
+            var result = GetItemAsync();
             foreach (Item i in result)
             {
                 if (item.ID == i.ID)
                 {
-                    return database.UpdateAsync(item);
+                    return database.Update(item);
                 }
             }
 
-            return database.InsertAsync(item);
+            return database.Insert(item);
         }
-        public Task<int> SaveItemTiesAsync(ItemTies itemTies)
+        public int SaveTransactionAsync(Transaction transaction)
         {
-            var result = GetItemTiesAsync().Result;
+            var result = database.Table<Transaction>().ToList();
+            foreach (Transaction i in result)
+            {
+                if (transaction.ID == i.ID)
+                {
+                    return database.Update(transaction);
+                }
+            }
+
+            return database.Insert(transaction);
+        }
+        public int SaveItemTiesAsync(ItemTies itemTies)
+        {
+            var result = GetItemTiesAsync();
             foreach (ItemTies i in result)
             {
                 if (itemTies.ID == i.ID)
                 {
-                    return database.UpdateAsync(itemTies);
+                    return database.Update(itemTies);
                 }
             }
 
-            return database.InsertAsync(itemTies);
+            return database.Insert(itemTies);
         }
-        public Task<int> SaveItemsListAsync(ItemsList itemsList)
+        public int SaveItemsListAsync(ItemsList itemsList)
         {
-            var result = GetItemsListsAsync().Result;
+            var result = GetItemsListsAsync();
             foreach (ItemsList i in result)
             {
                 if (itemsList.ID == i.ID)
                 {
-                    return database.UpdateAsync(itemsList);
+                    return database.Update(itemsList);
                 }
             }
 
-            return database.InsertAsync(itemsList);
+            return database.Insert(itemsList);
+        }
+        public void DeleteItem(Item item)
+        {
+            database.Delete(item);
+            database.Query<ItemTies>("DELETE FROM [ItemTies] WHERE [IDItem] = " + item.ID);
         }
         public void DeleteTables()
         {
-            database.QueryAsync<Item>("DELETE FROM [Item]");
-            database.QueryAsync<ItemsList>("DELETE FROM [ItemsList]");
-            database.QueryAsync<ItemTies>("DELETE FROM [ItemTies]");
+            database.Query<Item>("DELETE FROM [Item]");
+            database.Query<ItemsList>("DELETE FROM [ItemsList]");
+            database.Query<ItemTies>("DELETE FROM [ItemTies]");
         }
     }
 }

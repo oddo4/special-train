@@ -26,12 +26,14 @@ namespace cviceni_20180220
         {
             InitializeComponent();
             //App.Database.DeleteTables();
+            GetTotalYear();
+            GetTotalMonth();
             GetItemsLists();
         }
         private void GetItemsLists()
         {
             itemsLists = new ObservableCollection<ItemsList>();
-            var result = App.Database.GetItemsListsAsync().Result;
+            var result = App.Database.GetItemsListsAsync();
             foreach (ItemsList iList in result)
             {
                 itemsLists.Add(iList);
@@ -39,11 +41,32 @@ namespace cviceni_20180220
 
             lViewLists.ItemsSource = itemsLists;
         }
+        private void GetTotalYear()
+        {
+            var result = App.Database.GetItemTotalYear();
+            var totalYear = 0;
+            foreach (Item item in result)
+            {
+                totalYear += item.Cost;
+            }
+
+            txtBlkTotalYear.Text = "Tento rok: " + totalYear.ToString() + " ,-";
+        }
+        private void GetTotalMonth()
+        {
+            var result = App.Database.GetItemTotalMonth();
+            var totalMonth = 0;
+            foreach (Item item in result)
+            {
+                totalMonth += item.Cost;
+            }
+
+            txtBlkTotalMonth.Text = "Tento měsíc: " + totalMonth.ToString() + " ,-";
+        }
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             NavigateToPage(new AddPage());
         }
-
         private void btnShowList_Click(object sender, RoutedEventArgs e)
         {
             if (lViewLists.SelectedIndex != -1)
@@ -57,9 +80,9 @@ namespace cviceni_20180220
             ItemsList newItemsList = new ItemsList();
             newItemsList.Name = txtListName.Text;
             
-            if (App.Database.SaveItemsListAsync(newItemsList).Result != 0)
+            if (App.Database.SaveItemsListAsync(newItemsList) != 0)
             {
-                newItemsList = App.Database.GetItemsListsAsync().Result.Last();
+                newItemsList = App.Database.GetItemsListsAsync().Last();
             }    
 
             NavigateToPage(new ListPage(newItemsList));
@@ -74,6 +97,16 @@ namespace cviceni_20180220
         private void ResetElements()
         {
             txtListName.Text = "";
+        }
+
+        private void btnShowAll_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new ListPage());
+        }
+        private void UpdatePage(object sender, EventArgs e)
+        {
+            GetTotalYear();
+            GetTotalMonth();
         }
     }
 }
