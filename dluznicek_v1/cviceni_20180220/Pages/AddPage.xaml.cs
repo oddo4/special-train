@@ -21,10 +21,9 @@ namespace cviceni_20180220
     /// </summary>
     public partial class AddPage : Page
     {
-        ItemsList itemsList;
+        int idItemsList;
         Item item;
         Transaction transaction;
-        Debt debt;
 
         public AddPage()
         {
@@ -32,40 +31,21 @@ namespace cviceni_20180220
             item = new Item();
             transaction = new Transaction();
         }
-        public AddPage(ItemsList itemsList)
+        public AddPage(int id)
         {
             InitializeComponent();
-            this.itemsList = itemsList;
+            idItemsList = id;
             item = new Item();
-
-            if (itemsList.Type == 0)
-            {
-                transaction = new Transaction();
-            }
-            else
-            {
-                debt = new Debt();
-                ShowRaiseField();
-            }
+            transaction = new Transaction();
         }
-        public AddPage(ItemsList itemsList, Item item)
+        public AddPage(Item item)
         {
             InitializeComponent();
             this.item = item;
+            transaction = App.Database.GetTransaction(item.ID);
             txtName.Text = item.Name;
             txtCost.Text = item.Cost.ToString();
-
-            if (itemsList.Type == 0)
-            {
-                transaction = App.Database.GetTransaction(item.ID);
-                dpDate.SelectedDate = transaction.DateTransaction;
-            }
-            else
-            {
-                debt = App.Database.GetDebt(item.ID);
-                dpDate.SelectedDate = debt.DateToPay;
-                ShowRaiseField();
-            }
+            dpDate.SelectedDate = transaction.DateTransaction;
         }
 
         private void btnSend_Click(object sender, RoutedEventArgs e)
@@ -76,29 +56,17 @@ namespace cviceni_20180220
             App.Database.SaveItemAsync(newItem);
 
             newItem = App.Database.GetItemAsync().Last();
+            Transaction newTransaction = transaction;
+            newTransaction.IDItem = newItem.ID;
+            newTransaction.DateTransaction = dpDate.SelectedDate.Value;
 
-            if (itemsList.Type == 0)
-            {
-                Transaction newTransaction = transaction;
-                newTransaction.IDItem = newItem.ID;
-                newTransaction.DateTransaction = dpDate.SelectedDate.Value;
+            App.Database.SaveTransactionAsync(newTransaction);
 
-                App.Database.SaveTransactionAsync(newTransaction);
-            }
-            else
-            {
-                Debt newDebt = debt;
-                newDebt.IDItem = newItem.ID;
-                newDebt.DateToPay = dpDate.SelectedDate.Value;
-
-                App.Database.SaveDebtAsync(newDebt);
-            }
-
-            if(itemsList.ID != 0)
+            if(idItemsList != 0)
             {
                 ItemTies newItemTies = new ItemTies();
                 newItemTies.IDItem = newItem.ID;
-                newItemTies.IDItemsList = itemsList.ID;
+                newItemTies.IDItemsList = idItemsList;
 
                 App.Database.SaveItemTiesAsync(newItemTies);
             }
@@ -109,10 +77,6 @@ namespace cviceni_20180220
         private void btnGoBack_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.GoBack();
-        }
-        private void ShowRaiseField()
-        {
-            stackRaise.Visibility = Visibility.Visible;
         }
     }
 }

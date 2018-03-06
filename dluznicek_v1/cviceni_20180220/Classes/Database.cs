@@ -17,7 +17,6 @@ namespace cviceni_20180220
             database.CreateTable<ItemsList>();
             database.CreateTable<ItemTies>();
             database.CreateTable<Transaction>();
-            database.CreateTable<Debt>();
         }
         public List<Item> GetItemAsync()
         {
@@ -66,13 +65,9 @@ namespace cviceni_20180220
             }
             return items;
         }
-        public List<ItemsList> GetAllItemsLists()
+        public List<ItemsList> GetItemsListsAsync()
         {
             return database.Table<ItemsList>().ToList();
-        }
-        public List<ItemsList> GetItemsLists(int type)
-        {
-            return database.Query<ItemsList>("SELECT * FROM [ItemsList] WHERE [Type] = '" + type + "'");
         }
         public ItemsList GetItemsList(int idItemsList)
         {
@@ -85,10 +80,6 @@ namespace cviceni_20180220
         public Transaction GetTransaction(int idItem)
         {
             return database.Query<Transaction>("SELECT * FROM [Transaction] WHERE [IDItem] = '" + idItem + "'").FirstOrDefault();
-        }
-        public Debt GetDebt(int idItem)
-        {
-            return database.Query<Debt>("SELECT * FROM [Debt] WHERE [IDItem] = '" + idItem + "'").FirstOrDefault();
         }
         public int SaveItemAsync(Item item)
         {
@@ -116,19 +107,6 @@ namespace cviceni_20180220
 
             return database.Insert(transaction);
         }
-        public int SaveDebtAsync(Debt debt)
-        {
-            var result = database.Table<Debt>().ToList();
-            foreach (Debt i in result)
-            {
-                if (debt.ID == i.ID)
-                {
-                    return database.Update(debt);
-                }
-            }
-
-            return database.Insert(debt);
-        }
         public int SaveItemTiesAsync(ItemTies itemTies)
         {
             var result = GetItemTiesAsync();
@@ -144,7 +122,7 @@ namespace cviceni_20180220
         }
         public int SaveItemsListAsync(ItemsList itemsList)
         {
-            var result = GetAllItemsLists();
+            var result = GetItemsListsAsync();
             foreach (ItemsList i in result)
             {
                 if (itemsList.ID == i.ID)

@@ -8,31 +8,33 @@
       d:DesignHeight="350" d:DesignWidth="525"
       Title="AddPage">
 
-    <Grid>
+    <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
-        <Button x:Name="btnGoBack" Style="{StaticResource BackButton}" Grid.Row="0" Grid.Column="0" Content="Zpět" Click="btnGoBack_Click" Margin="10,10,0,0"/>
-        <Grid Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Label Grid.Row="0" Grid.Column="0" Content="Název: "/>
-            <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtName" Style="{StaticResource AddTextBox}"/>
-            <Label Grid.Row="1" Grid.Column="0" Content="Částka: "/>
-            <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtCost" Style="{StaticResource AddTextBox}"/>
-            <Label Grid.Row="2" Grid.Column="0" Content="Datum: "/>
-            <DatePicker Grid.Row="2" Grid.Column="1" x:Name="dpDate" Style="{StaticResource AddDatePicker}"/>
-            <Button Grid.Row="3" Grid.ColumnSpan="2" x:Name="btnSend" Style="{StaticResource SendButton}" Content="Odeslat" Margin="0,10,0,0" Click="btnSend_Click"/>
-        </Grid>
+        <Button x:Name="btnGoBack" Style="{StaticResource BackButton}" Grid.Row="0" Grid.Column="0" Content="Zpět" Click="btnGoBack_Click" Margin="10,0,0,0"/>
+        <StackPanel Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel x:Name="stackName" Orientation="Horizontal">
+                <Label Content="Název: "/>
+                <TextBox x:Name="txtName" Style="{StaticResource AddTextBox}"/>
+            </StackPanel>
+            <StackPanel x:Name="stackCost" Orientation="Horizontal">
+                <Label Content="Částka: "/>
+                <TextBox x:Name="txtCost" Style="{StaticResource AddTextBox}"/>
+            </StackPanel>
+            <StackPanel x:Name="stackDate" Orientation="Horizontal">
+                <Label Content="Datum: "/>
+                <DatePicker x:Name="dpDate" Style="{StaticResource AddDatePicker}"/>
+            </StackPanel>
+            <StackPanel x:Name="stackRaise" Orientation="Horizontal" Visibility="Collapsed">
+                <Label Content="Úrok: "/>
+                <TextBox x:Name="txtRaise" Style="{StaticResource AddTextBox}"/>
+            </StackPanel>
+            <StackPanel x:Name="stackSend" Orientation="Horizontal">
+                <Button x:Name="btnSend" Style="{StaticResource SendButton}" Content="Odeslat" Margin="0,10,0,0" Click="btnSend_Click"/>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Page>

@@ -23,15 +23,20 @@ namespace cviceni_20180220
     {
         ItemsList itemsList;
         ObservableCollection<Item> items = new ObservableCollection<Item>();
+        public ListPage()
+        {
+            InitializeComponent();
+            txtBlkListName.Text = "Všechny výdaje";
+            SwitchListNameElement(0);
+        }
         public ListPage(ItemsList itemsList)
         {
             InitializeComponent();
             this.itemsList = itemsList;
             txtListName.Text = itemsList.Name;
             SwitchListNameElement(1);
-            SetGridViewColumns(itemsList.Type);
         }
-        private void SetItems()
+        private void GetItems()
         {
             items = new ObservableCollection<Item>();
             List<Item> result;
@@ -45,18 +50,9 @@ namespace cviceni_20180220
             }
             foreach (Item item in result)
             {
-                if (itemsList.Type == 0)
-                {
-                    var trans = App.Database.GetTransaction(item.ID);
-                    item.FormattedDate = trans.DateTransaction.ToString("dd/MM/yyyy");
-                    items.Add(item);
-                }
-                else
-                {
-                    var trans = App.Database.GetDebt(item.ID);
-                    item.FormattedDate = trans.DateToPay.ToString("dd/MM/yyyy");
-                    items.Add(item);
-                }
+                var trans = App.Database.GetTransaction(item.ID);
+                item.FormattedDate = trans.DateTransaction.ToString("dd/MM/yyyy");
+                items.Add(item);
             }
 
             items = new ObservableCollection<Item>(items.OrderBy(c => c.FormattedDate));
@@ -73,23 +69,23 @@ namespace cviceni_20180220
             {
                 App.Database.DeleteItem(items[lViewItems.SelectedIndex]);
                 items.RemoveAt(lViewItems.SelectedIndex);
-                SetTotalSum();
+                GetTotalSum();
             }
         }
         private void btnEditItem_Click(object sender, RoutedEventArgs e)
         {
             if (lViewItems.SelectedIndex != -1)
             {
-                NavigationService.Navigate(new AddPage(itemsList, items[lViewItems.SelectedIndex]));
+                NavigationService.Navigate(new AddPage(items[lViewItems.SelectedIndex]));
             }
         }
         private void btnAddItem_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new AddPage(itemsList));
+            NavigationService.Navigate(new AddPage(itemsList.ID));
 
-            SetTotalSum();
+            GetTotalSum();
         }
-        private void SetTotalSum()
+        private void GetTotalSum()
         {
             int sum = 0;
             foreach (Item item in items)
@@ -101,10 +97,10 @@ namespace cviceni_20180220
         }
         private void UpdatePage(object sender, EventArgs e)
         {
-            SetItems();
+            GetItems();
             if (items.Any())
             {
-                SetTotalSum();
+                GetTotalSum();
             }
         }
 
@@ -128,13 +124,6 @@ namespace cviceni_20180220
                     break;
                 default:
                     break;
-            }
-        }
-        private void SetGridViewColumns(int type)
-        {
-            if (type == 1)
-            {
-                colDate.Header = "Datum lhůty splacení";
             }
         }
     }
