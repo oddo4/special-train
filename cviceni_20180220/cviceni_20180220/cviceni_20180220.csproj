@@ -73,13 +73,13 @@
     </ApplicationDefinition>
     <Compile Include="Classes\Debt.cs" />
     <Compile Include="Classes\Transaction.cs" />
-    <Compile Include="DebtListsPage.xaml.cs">
+    <Compile Include="Pages\DebtListsPage.xaml.cs">
       <DependentUpon>DebtListsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\SpendListsPage.xaml.cs">
       <DependentUpon>SpendListsPage.xaml</DependentUpon>
     </Compile>
-    <Page Include="DebtListsPage.xaml">
+    <Page Include="Pages\DebtListsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -37,11 +37,11 @@ namespace cviceni_20180220
             List<Item> result;
             if (itemsList != null)
             {
-                result = App.Database.GetItemsAsync(itemsList.ID);
+                result = App.Database.GetItemsSync(itemsList.ID);
             }
             else
             {
-                result = App.Database.GetItemAsync();
+                result = App.Database.GetItemSync();
             }
             foreach (Item item in result)
             {
@@ -91,7 +91,7 @@ namespace cviceni_20180220
         }
         private void SetTotalSum()
         {
-            int sum = 0;
+            var sum = 0.0;
             foreach (Item item in items)
             {
                 sum += item.Cost;
@@ -112,7 +112,7 @@ namespace cviceni_20180220
         {
             itemsList.Name = txtListName.Text;
 
-            App.Database.SaveItemsListAsync(itemsList);
+            App.Database.SaveItemsListSync(itemsList);
         }
         private void SwitchListNameElement(int i)
         {

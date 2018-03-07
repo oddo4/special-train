@@ -21,7 +21,7 @@
             <Button x:Name="btnGoBack" Style="{StaticResource BackButton}" Content="Zpět" Click="btnGoBack_Click" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,0,0,0"/>
             <TextBlock x:Name="txtBlkHeader" Style="{StaticResource HeaderName}" Text="Seznam dluhů" Margin="0,0,0,0" Grid.ColumnSpan="2"/>
             <StackPanel Grid.Row="1" Grid.Column="0" VerticalAlignment="Top">
-                <ListView x:Name="lViewItems" Height="200" Width="225">
+                <ListView x:Name="lViewItems" Height="180" Width="225">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn x:Name="colName" Header="Název" DisplayMemberBinding="{Binding Name}" Width="Auto"/>
@@ -34,27 +34,31 @@
                     <Button x:Name="btnDeleteDebt" Content="Odstranit" Width="60" Click="btnDeleteDebt_Click" Margin="5,0"/>
                 </StackPanel>
                 <StackPanel Margin="0,5,0,0">
-                    <TextBlock Text="Filtrovat: "/>
-                    <StackPanel Orientation="Horizontal"  Margin="0,5,0,0">
-                        <TextBlock Text="Částka: "/>
-                        <Button Content="Nejvyšší" Width="60" Click="btnSortCostAsc_Click" Margin="5,0"/>
-                        <Button Content="Nejnižší" Width="60" Click="btnSortCostDesc_Click" Margin="5,0"/>
+                    <TextBlock Text="Filtrovat podle: " HorizontalAlignment="Left"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0" HorizontalAlignment="Left">
+                        <TextBlock Text="Částky "/>
+                        <Button Content="Nejvyšší" Width="60" Click="btnSortCostDesc_Click" Margin="5,0"/>
+                        <Button Content="Nejnižší" Width="60" Click="btnSortCostAsc_Click" Margin="5,0"/>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal"  Margin="0,5,0,0">
-                        <TextBlock Text="Datum: "/>
-                        <Button Content="Nesplaceno do lhůty" Width="120" Click="btnSortNotPayed_Click" Margin="5,0"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0" HorizontalAlignment="Left">
+                        <TextBlock Text="Datumu: "/>
+                        <Button Content="Nejnovější" Width="60" Click="btnSortNewest_Click" Margin="5,0"/>
+                        <Button Content="Nejstarší" Width="60" Click="btnSortOldest_Click" Margin="5,0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0" HorizontalAlignment="Center">
+                        <Button Content="Nesplacené do lhůty" Width="120" Click="btnSortNotPayed_Click" Margin="5,0"/>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>
             <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Top">
-                <ListView x:Name="lViewLists" HorizontalAlignment="Center" Height="160" VerticalAlignment="Center" Width="150" Margin="0,0,0,0">
+                <ListView x:Name="lViewLists" HorizontalAlignment="Center" Height="180" VerticalAlignment="Center" Width="225" Margin="0,0,0,0">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Název" DisplayMemberBinding="{Binding Name}"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
-                <StackPanel Orientation="Horizontal" Margin="0,5">
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                     <Button x:Name="btnShowList" Content="Zobrazit" Width="60" Click="btnShowList_Click" Margin="5,0"/>
                     <Button x:Name="btnDeleteList" Content="Odstranit" Width="60" Click="btnDeleteList_Click" Margin="5,0"/>
                 </StackPanel>

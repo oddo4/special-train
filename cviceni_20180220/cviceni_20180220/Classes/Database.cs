@@ -19,11 +19,11 @@ namespace cviceni_20180220
             database.CreateTable<Transaction>();
             database.CreateTable<Debt>();
         }
-        public List<Item> GetItemAsync()
+        public List<Item> GetItemSync()
         {
             return database.Table<Item>().ToList();
         }
-        public List<Item> GetItemsAsync(int idList)
+        public List<Item> GetItemsSync(int idList)
         {
             List<Item> list = new List<Item>();
             var result = database.Query<ItemTies>("SELECT * FROM [ItemTies] WHERE [IDItemsList] = '" + idList + "'");
@@ -34,14 +34,18 @@ namespace cviceni_20180220
             }
             return list;
         }
-        public List<Transaction> GetTransactionAsync()
+        public List<Transaction> GetTransactionSync()
         {
             return database.Table<Transaction>().ToList();
+        }
+        public List<Debt> GetDebtSync()
+        {
+            return database.Table<Debt>().ToList();
         }
         public List<Item> GetItemTotalYear()
         {
             List<Item> items = new List<Item>();
-            var transaction = GetTransactionAsync();
+            var transaction = GetTransactionSync();
             var today = DateTime.Today;
             foreach (Transaction trans in transaction)
             {
@@ -55,7 +59,7 @@ namespace cviceni_20180220
         public List<Item> GetItemTotalMonth()
         {
             List<Item> items = new List<Item>();
-            var transaction = GetTransactionAsync();
+            var transaction = GetTransactionSync();
             var today = DateTime.Today;
             foreach (Transaction trans in transaction)
             {
@@ -78,7 +82,7 @@ namespace cviceni_20180220
         {
             return database.Query<ItemsList>("SELECT * FROM [ItemsList] WHERE [ID] = '" + idItemsList + "'").FirstOrDefault();
         }
-        public List<ItemTies> GetItemTiesAsync()
+        public List<ItemTies> GetItemTiesSync()
         {
             return database.Table<ItemTies>().ToList();
         }
@@ -90,9 +94,9 @@ namespace cviceni_20180220
         {
             return database.Query<Debt>("SELECT * FROM [Debt] WHERE [IDItem] = '" + idItem + "'").FirstOrDefault();
         }
-        public int SaveItemAsync(Item item)
+        public int SaveItemSync(Item item)
         {
-            var result = GetItemAsync();
+            var result = GetItemSync();
             foreach (Item i in result)
             {
                 if (item.ID == i.ID)
@@ -103,7 +107,7 @@ namespace cviceni_20180220
 
             return database.Insert(item);
         }
-        public int SaveTransactionAsync(Transaction transaction)
+        public int SaveTransactionSync(Transaction transaction)
         {
             var result = database.Table<Transaction>().ToList();
             foreach (Transaction i in result)
@@ -116,7 +120,7 @@ namespace cviceni_20180220
 
             return database.Insert(transaction);
         }
-        public int SaveDebtAsync(Debt debt)
+        public int SaveDebtSync(Debt debt)
         {
             var result = database.Table<Debt>().ToList();
             foreach (Debt i in result)
@@ -129,9 +133,9 @@ namespace cviceni_20180220
 
             return database.Insert(debt);
         }
-        public int SaveItemTiesAsync(ItemTies itemTies)
+        public int SaveItemTiesSync(ItemTies itemTies)
         {
-            var result = GetItemTiesAsync();
+            var result = GetItemTiesSync();
             foreach (ItemTies i in result)
             {
                 if (itemTies.ID == i.ID)
@@ -142,7 +146,7 @@ namespace cviceni_20180220
 
             return database.Insert(itemTies);
         }
-        public int SaveItemsListAsync(ItemsList itemsList)
+        public int SaveItemsListSync(ItemsList itemsList)
         {
             var result = GetAllItemsLists();
             foreach (ItemsList i in result)
@@ -160,6 +164,7 @@ namespace cviceni_20180220
             database.Delete(item);
             database.Query<ItemTies>("DELETE FROM [ItemTies] WHERE [IDItem] = " + item.ID);
             database.Query<Transaction>("DELETE FROM [Transaction] WHERE [IDItem] = " + item.ID);
+            database.Query<Debt>("DELETE FROM [Debt] WHERE [IDItem] = " + item.ID);
         }
         public void DeleteItemsList(ItemsList itemsList)
         {
@@ -171,6 +176,8 @@ namespace cviceni_20180220
             database.Query<Item>("DELETE FROM [Item]");
             database.Query<ItemsList>("DELETE FROM [ItemsList]");
             database.Query<ItemTies>("DELETE FROM [ItemTies]");
+            database.Query<Transaction>("DELETE FROM [Transaction]");
+            database.Query<Debt>("DELETE FROM [Debt]");
         }
     }
 }

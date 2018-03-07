@@ -73,9 +73,9 @@ namespace cviceni_20180220
             Item newItem = item;
             newItem.Name = txtName.Text;
             newItem.Cost = int.Parse(txtCost.Text);
-            App.Database.SaveItemAsync(newItem);
+            App.Database.SaveItemSync(newItem);
 
-            newItem = App.Database.GetItemAsync().Last();
+            newItem = App.Database.GetItemSync().Last();
 
             if (itemsList.Type == 0)
             {
@@ -83,15 +83,16 @@ namespace cviceni_20180220
                 newTransaction.IDItem = newItem.ID;
                 newTransaction.DateTransaction = dpDate.SelectedDate.Value;
 
-                App.Database.SaveTransactionAsync(newTransaction);
+                App.Database.SaveTransactionSync(newTransaction);
             }
             else
             {
                 Debt newDebt = debt;
                 newDebt.IDItem = newItem.ID;
                 newDebt.DateToPay = dpDate.SelectedDate.Value;
+                newDebt.RaisePercentage = int.Parse(txtRaise.Text);
 
-                App.Database.SaveDebtAsync(newDebt);
+                App.Database.SaveDebtSync(newDebt);
             }
 
             if(itemsList.ID != 0)
@@ -100,7 +101,7 @@ namespace cviceni_20180220
                 newItemTies.IDItem = newItem.ID;
                 newItemTies.IDItemsList = itemsList.ID;
 
-                App.Database.SaveItemTiesAsync(newItemTies);
+                App.Database.SaveItemTiesSync(newItemTies);
             }
 
             NavigationService.GoBack(); ;

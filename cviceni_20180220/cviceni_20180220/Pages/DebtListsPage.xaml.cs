@@ -17,13 +17,13 @@ using System.Windows.Shapes;
 namespace cviceni_20180220
 {
     /// <summary>
-    /// Interakční logika pro SpendListsPage.xaml
+    /// Interakční logika pro DebtListsPage.xaml
     /// </summary>
-    public partial class SpendListsPage : Page
+    public partial class DebtListsPage : Page
     {
         ObservableCollection<Item> items = new ObservableCollection<Item>();
         ObservableCollection<ItemsList> itemsLists = new ObservableCollection<ItemsList>();
-        public SpendListsPage()
+        public DebtListsPage()
         {
             InitializeComponent();
             SetItems();
@@ -37,10 +37,10 @@ namespace cviceni_20180220
 
             foreach (Item item in result)
             {
-                var trans = App.Database.GetTransaction(item.ID);
-                if (trans != null)
+                var debt = App.Database.GetDebt(item.ID);
+                if (debt != null)
                 {
-                    item.FormattedDate = trans.DateTransaction.ToString("dd/MM/yyyy");
+                    item.FormattedDate = debt.DateToPay.ToString("dd/MM/yyyy");
                     items.Add(item);
                 }
             }
@@ -50,7 +50,7 @@ namespace cviceni_20180220
         private void SetItemsLists()
         {
             itemsLists = new ObservableCollection<ItemsList>();
-            var result = App.Database.GetItemsLists(0);
+            var result = App.Database.GetItemsLists(1);
             foreach (ItemsList iList in result)
             {
                 itemsLists.Add(iList);
@@ -62,7 +62,7 @@ namespace cviceni_20180220
         {
             ItemsList newItemsList = new ItemsList();
             newItemsList.Name = txtListName.Text;
-            newItemsList.Type = 0;
+            newItemsList.Type = 1;
 
             if (App.Database.SaveItemsListSync(newItemsList) != 0)
             {
@@ -108,33 +108,92 @@ namespace cviceni_20180220
             NavigationService.GoBack();
         }
 
-        private void btnSortCostAsc_Click(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-        private void btnSortCostDesc_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void btnSortNewest_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void btnSortOldest_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void btnDeleteItem_Click(object sender, RoutedEventArgs e)
+        private void btnDeleteDebt_Click(object sender, RoutedEventArgs e)
         {
             if (lViewItems.SelectedIndex != -1)
             {
                 App.Database.DeleteItem(items[lViewItems.SelectedIndex]);
                 items.RemoveAt(lViewItems.SelectedIndex);
             }
+        }
+
+        private void btnSortCostAsc_Click(object sender, RoutedEventArgs e)
+        {
+            var sorted = items.OrderBy(i => i.Cost).ToList();
+            items = new ObservableCollection<Item>();
+            foreach (Item item in sorted)
+            {
+                items.Add(item);
+            }
+            lViewItems.ItemsSource = items;
+        }
+
+        private void btnSortCostDesc_Click(object sender, RoutedEventArgs e)
+        {
+            var sorted = items.OrderByDescending(i => i.Cost).ToList();
+            items = new ObservableCollection<Item>();
+            foreach (Item item in sorted)
+            {
+                items.Add(item);
+            }
+            lViewItems.ItemsSource = items;
+        }
+
+        private void btnSortNotPayed_Click(object sender, RoutedEventArgs e)
+        {
+            var today = DateTime.Today;
+            var allItems = items;
+            List<Item> notpayed = new List<Item>();
+
+            items = new ObservableCollection<Item>();
+            foreach (Item item in allItems)
+            {
+                var trans = App.Database.GetDebt(item.ID);
+                if (trans.DateToPay < today)
+                {
+                    items.Add(item);
+                }
+                else
+                {
+                    notpayed.Add(item);
+                }
+            }
+
+            itemsAddRange(notpayed);
+
+            lViewItems.ItemsSource = items;
+        }
+        private void itemsAddRange(List<Item> list)
+        {
+            foreach (Item item in list)
+            {
+                items.Add(item);
+            }
+        }
+
+        private void btnSortNewest_Click(object sender, RoutedEventArgs e)
+        {
+            var itemsCol = items;
+            var debtsList = App.Database.GetDebtSync().OrderByDescending(i => i.DateToPay).ToList();
+
+            items = new ObservableCollection<Item>();
+            for (int i = 0; i < itemsCol.Count; i++)
+            {
+                var item = items.Where(c => c.ID == debtsList[i].IDItem).First();
+                items.Add(item);
+            }
+            lViewItems.ItemsSource = items;
+        }
+
+        private void btnSortOldest_Click(object sender, RoutedEventArgs e)
+        {
+            var sorted = items.OrderByDescending(i => i.FormattedDate).ToList();
+            items = new ObservableCollection<Item>();
+            foreach (Item item in sorted)
+            {
+                items.Add(item);
+            }
+            lViewItems.ItemsSource = items;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace cviceni_20180220
         [PrimaryKey, AutoIncrement]
         public int ID { get; set; }
         public string Name { get; set; }
-        public int Cost { get; set; }
+        public double Cost { get; set; }
         [Ignore]
         public string FormattedDate { get; set; }
     }

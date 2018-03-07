@@ -25,27 +25,33 @@ namespace cviceni_20180220
         {
             InitializeComponent();
             //App.Database.DeleteTables();
+            CheckDebts();
             SetTotalYear();
             SetTotalMonth();
         }
         private void SetTotalYear()
         {
             var result = App.Database.GetItemTotalYear();
-            var totalYear = 0;
-            foreach (Item item in result)
+            var totalYear = 0.0;
+            if (result != null)
             {
-                totalYear += item.Cost;
+                foreach (Item item in result)
+                {
+                    totalYear += item.Cost;
+                }
             }
-
             txtBlkTotalYear.Text = "Tento rok: " + totalYear.ToString() + " ,-";
         }
         private void SetTotalMonth()
         {
             var result = App.Database.GetItemTotalMonth();
-            var totalMonth = 0;
-            foreach (Item item in result)
+            var totalMonth = 0.0;
+            if (result != null)
             {
-                totalMonth += item.Cost;
+                foreach (Item item in result)
+                {
+                    totalMonth += item.Cost;
+                }
             }
 
             txtBlkTotalMonth.Text = "Tento měsíc: " + totalMonth.ToString() + " ,-";
@@ -54,14 +60,29 @@ namespace cviceni_20180220
         {
             NavigationService.Navigate(page);
         }
-        private void UpdatePage(object sender, EventArgs e)
+        /*private void UpdatePage(object sender, EventArgs e)
         {
             SetTotalYear();
             SetTotalMonth();
-        }
+        }*/
         private void CheckDebts()
         {
+            var today = DateTime.Today;
+            var result = App.Database.GetItemSync();
 
+            foreach (Item item in result)
+            {
+                var debt = App.Database.GetDebt(item.ID);
+                if (debt != null)
+                {
+                    if (debt.DateToPay < today)
+                    {
+                        item.Cost += (debt.RaisePercentage / 100) * item.Cost;
+
+                        App.Database.SaveItemSync(item);
+                    }
+                }
+            }
         }
         private void btnShowSpendLists_Click(object sender, RoutedEventArgs e)
         {

@@ -16,19 +16,19 @@
         </Grid.RowDefinitions>
         <Button x:Name="btnGoBack" Style="{StaticResource BackButton}" Grid.Row="0" Grid.Column="0" Content="Zpět" Click="btnGoBack_Click" Margin="10,0,0,0"/>
         <StackPanel Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <StackPanel x:Name="stackName" Orientation="Horizontal">
+            <StackPanel x:Name="stackName" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Label Content="Název: "/>
                 <TextBox x:Name="txtName" Style="{StaticResource AddTextBox}"/>
             </StackPanel>
-            <StackPanel x:Name="stackCost" Orientation="Horizontal">
+            <StackPanel x:Name="stackCost" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Label Content="Částka: "/>
                 <TextBox x:Name="txtCost" Style="{StaticResource AddTextBox}"/>
             </StackPanel>
-            <StackPanel x:Name="stackDate" Orientation="Horizontal">
+            <StackPanel x:Name="stackDate" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Label Content="Datum: "/>
                 <DatePicker x:Name="dpDate" Style="{StaticResource AddDatePicker}"/>
             </StackPanel>
-            <StackPanel x:Name="stackRaise" Orientation="Horizontal" Visibility="Collapsed">
+            <StackPanel x:Name="stackRaise" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="Collapsed">
                 <Label Content="Úrok: "/>
                 <TextBox x:Name="txtRaise" Style="{StaticResource AddTextBox}"/>
             </StackPanel>
