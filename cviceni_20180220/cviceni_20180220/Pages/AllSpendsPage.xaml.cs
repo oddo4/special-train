@@ -1,4 +1,5 @@
-﻿using System;
+﻿using cviceni_20180220.Pages;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -15,17 +16,17 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace cviceni_20180220.Pages
+namespace cviceni_20180220
 {
     /// <summary>
     /// Interakční logika pro SpendListsPage.xaml
     /// </summary>
-    public partial class SpendListsPage : Page
+    public partial class AllSpendsPage : Page
     {
-        ObservableCollection<ItemsList> itemsLists = new ObservableCollection<ItemsList>();
+        ObservableCollection<Item> items = new ObservableCollection<Item>();
         GridViewColumnHeader _lastHeaderClicked = null;
         ListSortDirection _lastDirection = ListSortDirection.Ascending;
-        public SpendListsPage()
+        public AllSpendsPage()
         {
             InitializeComponent();
         }
@@ -33,51 +34,27 @@ namespace cviceni_20180220.Pages
         {
             ResetElements();
         }
-        private void SetItemsLists()
+        private void SetItems()
         {
-            itemsLists = new ObservableCollection<ItemsList>();
-            var result = App.Database.GetItemsLists(0);
-            foreach (ItemsList iList in result)
+            items = new ObservableCollection<Item>();
+            List<Item> result;
+            result = App.Database.GetItemSync();
+
+            foreach (Item item in result)
             {
-                itemsLists.Add(iList);
+                var trans = App.Database.GetTransaction(item.ID);
+                var tie = App.Database.GetItemTiesSync().Where(i => i.IDItem == item.ID).First();
+                var itemListName = App.Database.GetItemsList(tie.IDItemsList);
+
+                if (trans != null)
+                {
+                    item.ListName = itemListName.Name;
+                    item.FormattedDate = trans.DateTransaction.ToString("dd/MM/yyyy");
+                    items.Add(item);
+                }
             }
 
-            lViewLists.ItemsSource = itemsLists;
-        }
-        private void btnCreateList_Click(object sender, RoutedEventArgs e)
-        {
-            ItemsList newItemsList = new ItemsList();
-            newItemsList.Name = txtListName.Text;
-            newItemsList.Type = 0;
-
-            if (App.Database.SaveItemsListSync(newItemsList) != 0)
-            {
-                newItemsList = App.Database.GetAllItemsLists().Last();
-            }
-
-            NavigateToPage(new ListPage(newItemsList));
-
-            ResetElements();
-        }
-        private void btnDeleteList_Click(object sender, RoutedEventArgs e)
-        {
-            if (lViewLists.SelectedIndex != -1)
-            {
-                App.Database.DeleteItemsList(itemsLists[lViewLists.SelectedIndex]);
-                itemsLists.RemoveAt(lViewLists.SelectedIndex);
-            }
-        }
-        private void btnShowList_Click(object sender, RoutedEventArgs e)
-        {
-            if (lViewLists.SelectedIndex != -1)
-            {
-                var itemsList = itemsLists[lViewLists.SelectedIndex];
-                NavigateToPage(new ListPage(itemsList));
-            }
-        }
-        private void btnGoBack_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.GoBack();
+            lViewItems.ItemsSource = items;
         }
         private void NavigateToPage(Page page)
         {
@@ -85,8 +62,23 @@ namespace cviceni_20180220.Pages
         }
         private void ResetElements()
         {
-            txtListName.Text = "";
-            SetItemsLists();
+            SetItems();
+        }
+        private void btnGoBack_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.GoBack();
+        }
+        private void btnShowSpendLists_Click(object sender, RoutedEventArgs e)
+        {
+            NavigateToPage(new SpendListsPage());
+        }
+        private void btnDeleteItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (lViewItems.SelectedIndex != -1)
+            {
+                App.Database.DeleteItem(items[lViewItems.SelectedIndex]);
+                items.RemoveAt(lViewItems.SelectedIndex);
+            }
         }
         private void GridViewColumnHeaderClickedHandler(object sender, RoutedEventArgs e)
         {
@@ -142,7 +134,7 @@ namespace cviceni_20180220.Pages
         }
         private void Sort(string sortBy, ListSortDirection direction)
         {
-            ICollectionView dataView = CollectionViewSource.GetDefaultView(lViewLists.ItemsSource);
+            ICollectionView dataView = CollectionViewSource.GetDefaultView(lViewItems.ItemsSource);
 
             dataView.SortDescriptions.Clear();
             SortDescription sd = new SortDescription(sortBy, direction);

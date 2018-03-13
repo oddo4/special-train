@@ -9,7 +9,7 @@
     
     <Viewbox>
         <Grid Height="350" Width="525">
-            <Frame Source="/Pages/MainPage.xaml" NavigationUIVisibility="Hidden"/>
+            <Frame x:Name="MainFrame" Source="/Pages/MainPage.xaml" NavigationUIVisibility="Hidden"/>
         </Grid>
     </Viewbox>
     

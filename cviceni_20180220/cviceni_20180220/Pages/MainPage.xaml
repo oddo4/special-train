@@ -6,7 +6,8 @@
       xmlns:local="clr-namespace:cviceni_20180220"
       mc:Ignorable="d" 
       d:DesignHeight="350" d:DesignWidth="525"
-      Title="MainPage">
+      Title="MainPage"
+      Loaded="UpdatePage">
 
     <Grid Background="White">
         <Grid.RowDefinitions>
@@ -30,8 +31,20 @@
                 <TextBlock x:Name="txtBlkTotalYear" Style="{StaticResource TotalYear}" Text="Rok" Margin="0,0,0,0"/>
             </StackPanel>
             <StackPanel Grid.Row="1" Grid.Column="0">
-                <Button x:Name="btnShowSpendLists" Content="Seznam výdajů" Margin="0,0,0,0" Click="btnShowSpendLists_Click"/>
-                <Button x:Name="btnShowDebtLists" Content="Seznam dluhů" Margin="0,10,0,0" Click="btnShowDebtLists_Click"/>
+                <Button x:Name="btnShowSpendLists" Content="Seznam všech výdajů" Width="120" Margin="0,0,0,0" Click="btnShowSpendLists_Click"/>
+                <Button x:Name="btnShowDebtLists" Content="Seznam všech dluhů" Width="120" Margin="0,10,0,0" Click="btnShowDebtLists_Click"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="0" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="200"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Row="0" Grid.Column="0">
+                <TextBlock x:Name="txtBlkDebtInfo" Text="" Margin="0,0,0,10"/>
             </StackPanel>
         </Grid>
     </Grid>

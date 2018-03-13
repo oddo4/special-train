@@ -41,10 +41,12 @@ namespace cviceni_20180220
             if (itemsList.Type == 0)
             {
                 transaction = new Transaction();
+                txtBlkHeader.Text = "Přidat výdaj";
             }
             else
             {
                 debt = new Debt();
+                txtBlkHeader.Text = "Přidat dluh";
                 ShowRaiseField();
             }
         }
@@ -90,6 +92,8 @@ namespace cviceni_20180220
                 Debt newDebt = debt;
                 newDebt.IDItem = newItem.ID;
                 newDebt.DateToPay = dpDate.SelectedDate.Value;
+                newDebt.NextDateToPay = newDebt.DateToPay;
+                newDebt.RaiseCounter = 0;
                 newDebt.RaisePercentage = int.Parse(txtRaise.Text);
 
                 App.Database.SaveDebtSync(newDebt);

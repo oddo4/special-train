@@ -23,6 +23,7 @@ namespace cviceni_20180220
         public MainWindow()
         {
             InitializeComponent();
+            MainFrame.Navigate(new MainPage());
         }
     }
 }

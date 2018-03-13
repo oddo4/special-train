@@ -26,8 +26,6 @@ namespace cviceni_20180220
             InitializeComponent();
             //App.Database.DeleteTables();
             CheckDebts();
-            SetTotalYear();
-            SetTotalMonth();
         }
         private void SetTotalYear()
         {
@@ -60,11 +58,11 @@ namespace cviceni_20180220
         {
             NavigationService.Navigate(page);
         }
-        /*private void UpdatePage(object sender, EventArgs e)
+        private void UpdatePage(object sender, EventArgs e)
         {
             SetTotalYear();
             SetTotalMonth();
-        }*/
+        }
         private void CheckDebts()
         {
             var today = DateTime.Today;
@@ -75,23 +73,24 @@ namespace cviceni_20180220
                 var debt = App.Database.GetDebt(item.ID);
                 if (debt != null)
                 {
-                    if (debt.DateToPay < today)
+                    if (debt.NextDateToPay < today)
                     {
-                        item.Cost += (debt.RaisePercentage / 100) * item.Cost;
+                        debt.RaiseCounter++;
+                        debt.NextDateToPay = debt.NextDateToPay.AddMonths(1);
 
-                        App.Database.SaveItemSync(item);
+                        App.Database.SaveDebtSync(debt);
                     }
                 }
             }
         }
         private void btnShowSpendLists_Click(object sender, RoutedEventArgs e)
         {
-            NavigateToPage(new SpendListsPage());
+            NavigateToPage(new AllSpendsPage());
         }
 
         private void btnShowDebtLists_Click(object sender, RoutedEventArgs e)
         {
-            NavigateToPage(new DebtListsPage());
+            NavigateToPage(new AllDebtsPage());
         }
     }
 }

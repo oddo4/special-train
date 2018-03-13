@@ -1,4 +1,5 @@
-﻿using System;
+﻿using cviceni_20180220.Pages;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -15,17 +16,17 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace cviceni_20180220.Pages
+namespace cviceni_20180220
 {
     /// <summary>
-    /// Interakční logika pro SpendListsPage.xaml
+    /// Interakční logika pro DebtListsPage.xaml
     /// </summary>
-    public partial class SpendListsPage : Page
+    public partial class AllDebtsPage : Page
     {
-        ObservableCollection<ItemsList> itemsLists = new ObservableCollection<ItemsList>();
+        ObservableCollection<Item> items = new ObservableCollection<Item>();
         GridViewColumnHeader _lastHeaderClicked = null;
         ListSortDirection _lastDirection = ListSortDirection.Ascending;
-        public SpendListsPage()
+        public AllDebtsPage()
         {
             InitializeComponent();
         }
@@ -33,51 +34,33 @@ namespace cviceni_20180220.Pages
         {
             ResetElements();
         }
-        private void SetItemsLists()
+        private void SetItems()
         {
-            itemsLists = new ObservableCollection<ItemsList>();
-            var result = App.Database.GetItemsLists(0);
-            foreach (ItemsList iList in result)
+            items = new ObservableCollection<Item>();
+            List<Item> result;
+            result = App.Database.GetItemSync();
+
+            foreach (Item item in result)
             {
-                itemsLists.Add(iList);
+                var debt = App.Database.GetDebt(item.ID);
+                var tie = App.Database.GetItemTiesSync().Where(i => i.IDItem == item.ID).First();
+                var itemListName = App.Database.GetItemsList(tie.IDItemsList);
+
+                if (debt != null)
+                {
+                    item.ListName = itemListName.Name;
+                    item.FormattedDate = debt.DateToPay.ToString("dd/MM/yyyy");
+
+                    if (debt.RaiseCounter > 0)
+                    {
+                        item.Cost += (item.Cost / debt.RaisePercentage) * debt.RaiseCounter;
+                    }
+
+                    items.Add(item);
+                }
             }
 
-            lViewLists.ItemsSource = itemsLists;
-        }
-        private void btnCreateList_Click(object sender, RoutedEventArgs e)
-        {
-            ItemsList newItemsList = new ItemsList();
-            newItemsList.Name = txtListName.Text;
-            newItemsList.Type = 0;
-
-            if (App.Database.SaveItemsListSync(newItemsList) != 0)
-            {
-                newItemsList = App.Database.GetAllItemsLists().Last();
-            }
-
-            NavigateToPage(new ListPage(newItemsList));
-
-            ResetElements();
-        }
-        private void btnDeleteList_Click(object sender, RoutedEventArgs e)
-        {
-            if (lViewLists.SelectedIndex != -1)
-            {
-                App.Database.DeleteItemsList(itemsLists[lViewLists.SelectedIndex]);
-                itemsLists.RemoveAt(lViewLists.SelectedIndex);
-            }
-        }
-        private void btnShowList_Click(object sender, RoutedEventArgs e)
-        {
-            if (lViewLists.SelectedIndex != -1)
-            {
-                var itemsList = itemsLists[lViewLists.SelectedIndex];
-                NavigateToPage(new ListPage(itemsList));
-            }
-        }
-        private void btnGoBack_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.GoBack();
+            lViewItems.ItemsSource = items;
         }
         private void NavigateToPage(Page page)
         {
@@ -85,8 +68,55 @@ namespace cviceni_20180220.Pages
         }
         private void ResetElements()
         {
-            txtListName.Text = "";
-            SetItemsLists();
+            SetItems();
+        }
+        private void btnGoBack_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.GoBack();
+        }
+
+        private void btnDeleteDebt_Click(object sender, RoutedEventArgs e)
+        {
+            if (lViewItems.SelectedIndex != -1)
+            {
+                App.Database.DeleteItem(items[lViewItems.SelectedIndex]);
+                items.RemoveAt(lViewItems.SelectedIndex);
+            }
+        }
+        private void btnShowDebtLists_Click(object sender, RoutedEventArgs e)
+        {
+            NavigateToPage(new DebtListsPage());
+        }
+        private void btnSortNotPayed_Click(object sender, RoutedEventArgs e)
+        {
+            var today = DateTime.Today;
+            var allItems = items;
+            List<Item> notpayed = new List<Item>();
+
+            items = new ObservableCollection<Item>();
+            foreach (Item item in allItems)
+            {
+                var trans = App.Database.GetDebt(item.ID);
+                if (trans.DateToPay < today)
+                {
+                    items.Add(item);
+                }
+                else
+                {
+                    notpayed.Add(item);
+                }
+            }
+
+            itemsAddRange(notpayed);
+
+            lViewItems.ItemsSource = items;
+        }
+        private void itemsAddRange(List<Item> list)
+        {
+            foreach (Item item in list)
+            {
+                items.Add(item);
+            }
         }
         private void GridViewColumnHeaderClickedHandler(object sender, RoutedEventArgs e)
         {
@@ -142,7 +172,7 @@ namespace cviceni_20180220.Pages
         }
         private void Sort(string sortBy, ListSortDirection direction)
         {
-            ICollectionView dataView = CollectionViewSource.GetDefaultView(lViewLists.ItemsSource);
+            ICollectionView dataView = CollectionViewSource.GetDefaultView(lViewItems.ItemsSource);
 
             dataView.SortDescriptions.Clear();
             SortDescription sd = new SortDescription(sortBy, direction);

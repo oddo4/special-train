@@ -15,6 +15,7 @@
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
         <Button x:Name="btnGoBack" Style="{StaticResource BackButton}" Grid.Row="0" Grid.Column="0" Content="Zpět" Click="btnGoBack_Click" Margin="10,0,0,0"/>
+        <TextBlock x:Name="txtBlkHeader" Style="{StaticResource HeaderName}" Text="" Margin="0,0,0,0" Grid.ColumnSpan="2"/>
         <StackPanel Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
             <StackPanel x:Name="stackName" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Label Content="Název: "/>

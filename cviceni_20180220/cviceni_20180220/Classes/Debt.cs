@@ -13,6 +13,8 @@ namespace cviceni_20180220
         public int ID { get; set; }
         public int IDItem { get; set; }
         public DateTime DateToPay { get; set; }
+        public DateTime NextDateToPay { get; set; }
+        public int RaiseCounter { get; set; }
         public double RaisePercentage { get; set; }
     }
 }

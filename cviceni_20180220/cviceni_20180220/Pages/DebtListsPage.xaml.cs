@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,38 +15,28 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace cviceni_20180220
+namespace cviceni_20180220.Pages
 {
     /// <summary>
     /// Interakční logika pro DebtListsPage.xaml
     /// </summary>
     public partial class DebtListsPage : Page
     {
-        ObservableCollection<Item> items = new ObservableCollection<Item>();
         ObservableCollection<ItemsList> itemsLists = new ObservableCollection<ItemsList>();
+        GridViewColumnHeader _lastHeaderClicked = null;
+        ListSortDirection _lastDirection = ListSortDirection.Ascending;
         public DebtListsPage()
         {
             InitializeComponent();
-            SetItems();
-            SetItemsLists();
         }
-        private void SetItems()
+        private void UpdatePage(object sender, EventArgs e)
         {
-            items = new ObservableCollection<Item>();
-            List<Item> result;
-            result = App.Database.GetItemSync();
-
-            foreach (Item item in result)
-            {
-                var debt = App.Database.GetDebt(item.ID);
-                if (debt != null)
-                {
-                    item.FormattedDate = debt.DateToPay.ToString("dd/MM/yyyy");
-                    items.Add(item);
-                }
-            }
-
-            lViewItems.ItemsSource = items;
+            ResetElements();
+        }
+        private void ResetElements()
+        {
+            txtListName.Text = "";
+            SetItemsLists();
         }
         private void SetItemsLists()
         {
@@ -57,6 +48,14 @@ namespace cviceni_20180220
             }
 
             lViewLists.ItemsSource = itemsLists;
+        }
+        private void NavigateToPage(Page page)
+        {
+            NavigationService.Navigate(page);
+        }
+        private void btnGoBack_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.GoBack();
         }
         private void btnCreateList_Click(object sender, RoutedEventArgs e)
         {
@@ -81,10 +80,6 @@ namespace cviceni_20180220
                 itemsLists.RemoveAt(lViewLists.SelectedIndex);
             }
         }
-        private void btnAdd_Click(object sender, RoutedEventArgs e)
-        {
-            NavigateToPage(new AddPage());
-        }
         private void btnShowList_Click(object sender, RoutedEventArgs e)
         {
             if (lViewLists.SelectedIndex != -1)
@@ -93,107 +88,66 @@ namespace cviceni_20180220
                 NavigateToPage(new ListPage(itemsList));
             }
         }
-        private void NavigateToPage(Page page)
+        private void GridViewColumnHeaderClickedHandler(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(page);
-        }
-        private void ResetElements()
-        {
-            txtListName.Text = "";
-            SetItems();
-            SetItemsLists();
-        }
-        private void btnGoBack_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.GoBack();
-        }
+            var headerClicked = e.OriginalSource as GridViewColumnHeader;
+            ListSortDirection direction;
 
-        private void btnDeleteDebt_Click(object sender, RoutedEventArgs e)
-        {
-            if (lViewItems.SelectedIndex != -1)
+            if (headerClicked != null)
             {
-                App.Database.DeleteItem(items[lViewItems.SelectedIndex]);
-                items.RemoveAt(lViewItems.SelectedIndex);
-            }
-        }
-
-        private void btnSortCostAsc_Click(object sender, RoutedEventArgs e)
-        {
-            var sorted = items.OrderBy(i => i.Cost).ToList();
-            items = new ObservableCollection<Item>();
-            foreach (Item item in sorted)
-            {
-                items.Add(item);
-            }
-            lViewItems.ItemsSource = items;
-        }
-
-        private void btnSortCostDesc_Click(object sender, RoutedEventArgs e)
-        {
-            var sorted = items.OrderByDescending(i => i.Cost).ToList();
-            items = new ObservableCollection<Item>();
-            foreach (Item item in sorted)
-            {
-                items.Add(item);
-            }
-            lViewItems.ItemsSource = items;
-        }
-
-        private void btnSortNotPayed_Click(object sender, RoutedEventArgs e)
-        {
-            var today = DateTime.Today;
-            var allItems = items;
-            List<Item> notpayed = new List<Item>();
-
-            items = new ObservableCollection<Item>();
-            foreach (Item item in allItems)
-            {
-                var trans = App.Database.GetDebt(item.ID);
-                if (trans.DateToPay < today)
+                if (headerClicked.Role != GridViewColumnHeaderRole.Padding)
                 {
-                    items.Add(item);
-                }
-                else
-                {
-                    notpayed.Add(item);
+                    if (headerClicked != _lastHeaderClicked)
+                    {
+                        direction = ListSortDirection.Ascending;
+                    }
+                    else
+                    {
+                        if (_lastDirection == ListSortDirection.Ascending)
+                        {
+                            direction = ListSortDirection.Descending;
+                        }
+                        else
+                        {
+                            direction = ListSortDirection.Ascending;
+                        }
+                    }
+
+                    var columnBinding = headerClicked.Column.DisplayMemberBinding as Binding;
+                    var sortBy = columnBinding?.Path.Path ?? headerClicked.Column.Header as string;
+
+                    Sort(sortBy, direction);
+
+                    if (direction == ListSortDirection.Ascending)
+                    {
+                        headerClicked.Column.HeaderTemplate =
+                          Resources["HeaderTemplateArrowUp"] as DataTemplate;
+                    }
+                    else
+                    {
+                        headerClicked.Column.HeaderTemplate =
+                          Resources["HeaderTemplateArrowDown"] as DataTemplate;
+                    }
+
+                    // Remove arrow from previously sorted header  
+                    if (_lastHeaderClicked != null && _lastHeaderClicked != headerClicked)
+                    {
+                        _lastHeaderClicked.Column.HeaderTemplate = null;
+                    }
+
+                    _lastHeaderClicked = headerClicked;
+                    _lastDirection = direction;
                 }
             }
-
-            itemsAddRange(notpayed);
-
-            lViewItems.ItemsSource = items;
         }
-        private void itemsAddRange(List<Item> list)
+        private void Sort(string sortBy, ListSortDirection direction)
         {
-            foreach (Item item in list)
-            {
-                items.Add(item);
-            }
-        }
+            ICollectionView dataView = CollectionViewSource.GetDefaultView(lViewLists.ItemsSource);
 
-        private void btnSortNewest_Click(object sender, RoutedEventArgs e)
-        {
-            var itemsCol = items;
-            var debtsList = App.Database.GetDebtSync().OrderByDescending(i => i.DateToPay).ToList();
-
-            items = new ObservableCollection<Item>();
-            for (int i = 0; i < itemsCol.Count; i++)
-            {
-                var item = items.Where(c => c.ID == debtsList[i].IDItem).First();
-                items.Add(item);
-            }
-            lViewItems.ItemsSource = items;
-        }
-
-        private void btnSortOldest_Click(object sender, RoutedEventArgs e)
-        {
-            var sorted = items.OrderByDescending(i => i.FormattedDate).ToList();
-            items = new ObservableCollection<Item>();
-            foreach (Item item in sorted)
-            {
-                items.Add(item);
-            }
-            lViewItems.ItemsSource = items;
+            dataView.SortDescriptions.Clear();
+            SortDescription sd = new SortDescription(sortBy, direction);
+            dataView.SortDescriptions.Add(sd);
+            dataView.Refresh();
         }
     }
 }

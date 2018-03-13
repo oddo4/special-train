@@ -73,12 +73,16 @@
     </ApplicationDefinition>
     <Compile Include="Classes\Debt.cs" />
     <Compile Include="Classes\Transaction.cs" />
-    <Compile Include="Pages\DebtListsPage.xaml.cs">
-      <DependentUpon>DebtListsPage.xaml</DependentUpon>
+    <Compile Include="Pages\AllDebtsPage.xaml.cs">
+      <DependentUpon>AllDebtsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\SpendListsPage.xaml.cs">
-      <DependentUpon>SpendListsPage.xaml</DependentUpon>
+    <Compile Include="Pages\AllSpendsPage.xaml.cs">
+      <DependentUpon>AllSpendsPage.xaml</DependentUpon>
     </Compile>
+    <Page Include="Pages\AllDebtsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\DebtListsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -100,6 +104,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Classes\ItemTies.cs" />
+    <Compile Include="Pages\DebtListsPage.xaml.cs">
+      <DependentUpon>DebtListsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\ListPage.xaml.cs">
       <DependentUpon>ListPage.xaml</DependentUpon>
     </Compile>
@@ -120,12 +127,19 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Pages\AllSpendsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\SpendListsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Pages\SpendListsPage.xaml.cs">
+      <DependentUpon>SpendListsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
