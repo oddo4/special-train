@@ -25,6 +25,7 @@
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Jméno" DisplayMemberBinding="{Binding Name}"/>
+                        <GridViewColumn Header="Celkem" DisplayMemberBinding="{Binding CostSum}"/>
                     </GridView>
                 </ListView.View>
             </ListView>

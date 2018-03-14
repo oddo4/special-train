@@ -36,35 +36,8 @@ namespace cviceni_20180220
         }
         private void SetItems()
         {
-            items = new ObservableCollection<Item>();
-            List<Item> result;
-            result = App.Database.GetItemSync();
-
-            foreach (Item item in result)
-            {
-                var debt = App.Database.GetDebt(item.ID);
-                var tie = App.Database.GetItemTiesSync().Where(i => i.IDItem == item.ID).First();
-                var itemListName = App.Database.GetItemsList(tie.IDItemsList);
-
-                if (debt != null)
-                {
-                    item.ListName = itemListName.Name;
-                    item.FormattedDate = debt.DateToPay.ToString("dd/MM/yyyy");
-
-                    if (debt.RaiseCounter > 0)
-                    {
-                        item.Cost += (item.Cost / debt.RaisePercentage) * debt.RaiseCounter;
-                    }
-
-                    items.Add(item);
-                }
-            }
-
+            items = App.LoadDatasInListView.GetItems(1);
             lViewItems.ItemsSource = items;
-        }
-        private void NavigateToPage(Page page)
-        {
-            NavigationService.Navigate(page);
         }
         private void ResetElements()
         {
@@ -72,7 +45,7 @@ namespace cviceni_20180220
         }
         private void btnGoBack_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.GoBack();
+            NavigationServiceSingleton.GetNavigationService().NavigateBack();
         }
 
         private void btnDeleteDebt_Click(object sender, RoutedEventArgs e)
@@ -85,7 +58,7 @@ namespace cviceni_20180220
         }
         private void btnShowDebtLists_Click(object sender, RoutedEventArgs e)
         {
-            NavigateToPage(new DebtListsPage());
+            NavigationServiceSingleton.GetNavigationService().NavigateToPage(new DebtListsPage());
         }
         private void btnSortNotPayed_Click(object sender, RoutedEventArgs e)
         {
@@ -96,8 +69,10 @@ namespace cviceni_20180220
             items = new ObservableCollection<Item>();
             foreach (Item item in allItems)
             {
-                var trans = App.Database.GetDebt(item.ID);
-                if (trans.DateToPay < today)
+                var trans = App.Database.GetTransaction(item.ID);
+                var debt = App.Database.GetDebt(trans.ID);
+
+                if (debt.NextDateToPay < today)
                 {
                     items.Add(item);
                 }

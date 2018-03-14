@@ -22,7 +22,7 @@
         <TextBlock x:Name="txtBlkHeader" Style="{StaticResource HeaderName}" Text="Seznam všech výdajů" Margin="0,0,0,0" Grid.ColumnSpan="2"/>
         <StackPanel Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">
             <ListView x:Name="lViewItems" Height="180" Width="270" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
-                <ListView.View>
+                <ListView.View>      
                     <GridView>
                         <GridViewColumn x:Name="colListName" Header="Seznam" DisplayMemberBinding="{Binding ListName}" Width="Auto"/>
                         <GridViewColumn x:Name="colName" Header="Název" DisplayMemberBinding="{Binding Name}" Width="Auto"/>

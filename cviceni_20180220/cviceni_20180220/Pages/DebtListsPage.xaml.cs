@@ -40,22 +40,12 @@ namespace cviceni_20180220.Pages
         }
         private void SetItemsLists()
         {
-            itemsLists = new ObservableCollection<ItemsList>();
-            var result = App.Database.GetItemsLists(1);
-            foreach (ItemsList iList in result)
-            {
-                itemsLists.Add(iList);
-            }
-
+            itemsLists = App.LoadDatasInListView.GetItemsLists(1);
             lViewLists.ItemsSource = itemsLists;
-        }
-        private void NavigateToPage(Page page)
-        {
-            NavigationService.Navigate(page);
         }
         private void btnGoBack_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.GoBack();
+            NavigationServiceSingleton.GetNavigationService().NavigateBack();
         }
         private void btnCreateList_Click(object sender, RoutedEventArgs e)
         {
@@ -68,7 +58,7 @@ namespace cviceni_20180220.Pages
                 newItemsList = App.Database.GetAllItemsLists().Last();
             }
 
-            NavigateToPage(new ListPage(newItemsList));
+            NavigationServiceSingleton.GetNavigationService().NavigateToPage(new ListPage(newItemsList));
 
             ResetElements();
         }
@@ -85,7 +75,7 @@ namespace cviceni_20180220.Pages
             if (lViewLists.SelectedIndex != -1)
             {
                 var itemsList = itemsLists[lViewLists.SelectedIndex];
-                NavigateToPage(new ListPage(itemsList));
+                NavigationServiceSingleton.GetNavigationService().NavigateToPage(new ListPage(itemsList));
             }
         }
         private void GridViewColumnHeaderClickedHandler(object sender, RoutedEventArgs e)

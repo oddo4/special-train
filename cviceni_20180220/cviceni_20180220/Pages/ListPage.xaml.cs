@@ -35,28 +35,16 @@ namespace cviceni_20180220
         {
             items = new ObservableCollection<Item>();
             List<Item> result;
-            if (itemsList != null)
-            {
-                result = App.Database.GetItemsSync(itemsList.ID);
-            }
-            else
-            {
-                result = App.Database.GetItemSync();
-            }
+
+            result = App.Database.GetItemsSync(itemsList.ID);
+
             foreach (Item item in result)
             {
-                if (itemsList.Type == 0)
-                {
-                    var trans = App.Database.GetTransaction(item.ID);
-                    item.FormattedDate = trans.DateTransaction.ToString("dd/MM/yyyy");
-                    items.Add(item);
-                }
-                else
-                {
-                    var trans = App.Database.GetDebt(item.ID);
-                    item.FormattedDate = trans.DateToPay.ToString("dd/MM/yyyy");
-                    items.Add(item);
-                }
+                var trans = App.Database.GetTransaction(item.ID);
+                var debt = App.Database.GetDebt(trans.ID);
+
+                item.FormattedDate = trans.DateTransaction.ToString("dd/MM/yyyy");
+                items.Add(item);
             }
 
             items = new ObservableCollection<Item>(items.OrderBy(c => c.FormattedDate));

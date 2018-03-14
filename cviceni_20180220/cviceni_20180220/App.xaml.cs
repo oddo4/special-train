@@ -1,4 +1,5 @@
-﻿using System;
+﻿using cviceni_20180220.Classes;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -25,5 +26,6 @@ namespace cviceni_20180220
                 return database;
             }
         }
+        public static LoadDatasInListView LoadDatasInListView = new LoadDatasInListView();
     }
 }

@@ -19,9 +19,29 @@ namespace cviceni_20180220
             database.CreateTable<Transaction>();
             database.CreateTable<Debt>();
         }
-        public List<Item> GetItemSync()
+        public List<Item> GetAllItemsSync()
         {
             return database.Table<Item>().ToList();
+        }
+        public List<Item> GetItemByTypeSync(int listType)
+        {
+            List<Item> list = new List<Item>();
+            var itemLists = GetAllItemsLists().Where(itemList => itemList.Type == listType).ToList();
+
+            foreach (ItemsList itemsList in itemLists)
+            {
+                var itemTies = database.Table<ItemTies>().Where(tie => tie.IDItemsList == itemsList.ID).ToList();
+                foreach (ItemTies itemTie in itemTies)
+                {
+                    var items = GetAllItemsSync().Where(item => item.ID == itemTie.IDItem).ToList();
+
+                    list.AddRange(items);
+                }
+            }
+            
+            return list;
+
+            //return database.Table<Item>().ToList();
         }
         public List<Item> GetItemsSync(int idList)
         {
@@ -34,24 +54,25 @@ namespace cviceni_20180220
             }
             return list;
         }
-        public List<Transaction> GetTransactionSync()
+        public List<Transaction> GetAllTransactionSync()
         {
             return database.Table<Transaction>().ToList();
         }
-        public List<Debt> GetDebtSync()
+        public List<Debt> GetAllDebtSync()
         {
             return database.Table<Debt>().ToList();
         }
         public List<Item> GetItemTotalYear()
         {
             List<Item> items = new List<Item>();
-            var transaction = GetTransactionSync();
+            var transaction = GetAllTransactionSync();
             var today = DateTime.Today;
             foreach (Transaction trans in transaction)
             {
-                if (trans.DateTransaction.Year == today.Year /*&& trans.DateTransaction.Month <= today.Month*/)
+                if (trans.DateTransaction.Year == today.Year)
                 {
-                    items.Add(database.Query<Item>("SELECT * FROM [Item] WHERE [ID] = '" + trans.IDItem + "'").FirstOrDefault());
+                    var item = database.Table<Item>().Where(i => i.ID == trans.IDItem).FirstOrDefault();
+                    items.Add(item);
                 }
             }
             return items;
@@ -59,13 +80,14 @@ namespace cviceni_20180220
         public List<Item> GetItemTotalMonth()
         {
             List<Item> items = new List<Item>();
-            var transaction = GetTransactionSync();
+            var transaction = GetAllTransactionSync();
             var today = DateTime.Today;
             foreach (Transaction trans in transaction)
             {
-                if (trans.DateTransaction.Year == today.Year && trans.DateTransaction.Month == today.Month /*&& trans.DateTransaction <= today*/)
+                if (trans.DateTransaction.Year == today.Year && trans.DateTransaction.Month == today.Month)
                 {
-                    items.Add(database.Query<Item>("SELECT * FROM [Item] WHERE [ID] = '" + trans.IDItem + "'").FirstOrDefault());
+                    var item = database.Table<Item>().Where(i => i.ID == trans.IDItem).FirstOrDefault();
+                    items.Add(item);
                 }
             }
             return items;
@@ -76,11 +98,11 @@ namespace cviceni_20180220
         }
         public List<ItemsList> GetItemsLists(int type)
         {
-            return database.Query<ItemsList>("SELECT * FROM [ItemsList] WHERE [Type] = '" + type + "'");
+            return database.Table<ItemsList>().Where(list => list.Type == type).ToList();
         }
         public ItemsList GetItemsList(int idItemsList)
         {
-            return database.Query<ItemsList>("SELECT * FROM [ItemsList] WHERE [ID] = '" + idItemsList + "'").FirstOrDefault();
+            return database.Table<ItemsList>().Where(list => list.ID == idItemsList).FirstOrDefault();
         }
         public List<ItemTies> GetItemTiesSync()
         {
@@ -88,15 +110,15 @@ namespace cviceni_20180220
         }
         public Transaction GetTransaction(int idItem)
         {
-            return database.Query<Transaction>("SELECT * FROM [Transaction] WHERE [IDItem] = '" + idItem + "'").FirstOrDefault();
+            return database.Table<Transaction>().Where(trans => trans.IDItem == idItem).FirstOrDefault();
         }
-        public Debt GetDebt(int idItem)
+        public Debt GetDebt(int idTransaction)
         {
-            return database.Query<Debt>("SELECT * FROM [Debt] WHERE [IDItem] = '" + idItem + "'").FirstOrDefault();
+            return database.Query<Debt>("SELECT * FROM [Debt] WHERE [IDTransaction] = '" + idTransaction + "'").FirstOrDefault();
         }
         public int SaveItemSync(Item item)
         {
-            var result = GetItemSync();
+            var result = database.Table<Item>().ToList();
             foreach (Item i in result)
             {
                 if (item.ID == i.ID)
@@ -161,10 +183,12 @@ namespace cviceni_20180220
         }
         public void DeleteItem(Item item)
         {
+            var trans = GetTransaction(item.ID);
+
             database.Delete(item);
             database.Query<ItemTies>("DELETE FROM [ItemTies] WHERE [IDItem] = " + item.ID);
             database.Query<Transaction>("DELETE FROM [Transaction] WHERE [IDItem] = " + item.ID);
-            database.Query<Debt>("DELETE FROM [Debt] WHERE [IDItem] = " + item.ID);
+            database.Query<Debt>("DELETE FROM [Debt] WHERE [IDTransaction] = " + trans.ID);
         }
         public void DeleteItemsList(ItemsList itemsList)
         {

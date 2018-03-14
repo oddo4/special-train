@@ -36,29 +36,8 @@ namespace cviceni_20180220
         }
         private void SetItems()
         {
-            items = new ObservableCollection<Item>();
-            List<Item> result;
-            result = App.Database.GetItemSync();
-
-            foreach (Item item in result)
-            {
-                var trans = App.Database.GetTransaction(item.ID);
-                var tie = App.Database.GetItemTiesSync().Where(i => i.IDItem == item.ID).First();
-                var itemListName = App.Database.GetItemsList(tie.IDItemsList);
-
-                if (trans != null)
-                {
-                    item.ListName = itemListName.Name;
-                    item.FormattedDate = trans.DateTransaction.ToString("dd/MM/yyyy");
-                    items.Add(item);
-                }
-            }
-
+            items = App.LoadDatasInListView.GetItems(0);
             lViewItems.ItemsSource = items;
-        }
-        private void NavigateToPage(Page page)
-        {
-            NavigationService.Navigate(page);
         }
         private void ResetElements()
         {
@@ -66,18 +45,17 @@ namespace cviceni_20180220
         }
         private void btnGoBack_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.GoBack();
+            NavigationServiceSingleton.GetNavigationService().NavigateBack();
         }
         private void btnShowSpendLists_Click(object sender, RoutedEventArgs e)
         {
-            NavigateToPage(new SpendListsPage());
+            NavigationServiceSingleton.GetNavigationService().NavigateToPage(new SpendListsPage());
         }
         private void btnDeleteItem_Click(object sender, RoutedEventArgs e)
         {
             if (lViewItems.SelectedIndex != -1)
             {
-                App.Database.DeleteItem(items[lViewItems.SelectedIndex]);
-                items.RemoveAt(lViewItems.SelectedIndex);
+                App.LoadDatasInListView.DeleteItem(items, lViewItems.SelectedIndex);
             }
         }
         private void GridViewColumnHeaderClickedHandler(object sender, RoutedEventArgs e)

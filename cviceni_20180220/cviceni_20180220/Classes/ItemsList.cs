@@ -13,5 +13,7 @@ namespace cviceni_20180220
         public int ID { get; set; }
         public string Name { get; set; }
         public int Type { get; set; }
+        [Ignore]
+        public double CostSum { get; set; }
     }
 }

@@ -25,6 +25,7 @@ namespace cviceni_20180220
         {
             InitializeComponent();
             //App.Database.DeleteTables();
+            NavigationServiceSingleton.GetNavigationService().SetCurrentPage(this);
             CheckDebts();
         }
         private void SetTotalYear()
@@ -54,10 +55,6 @@ namespace cviceni_20180220
 
             txtBlkTotalMonth.Text = "Tento měsíc: " + totalMonth.ToString() + " ,-";
         }
-        private void NavigateToPage(Page page)
-        {
-            NavigationService.Navigate(page);
-        }
         private void UpdatePage(object sender, EventArgs e)
         {
             SetTotalYear();
@@ -66,7 +63,7 @@ namespace cviceni_20180220
         private void CheckDebts()
         {
             var today = DateTime.Today;
-            var result = App.Database.GetItemSync();
+            var result = App.Database.GetAllItemsSync();
 
             foreach (Item item in result)
             {
@@ -85,12 +82,12 @@ namespace cviceni_20180220
         }
         private void btnShowSpendLists_Click(object sender, RoutedEventArgs e)
         {
-            NavigateToPage(new AllSpendsPage());
+            NavigationServiceSingleton.GetNavigationService().NavigateToPage(new AllSpendsPage());
         }
 
         private void btnShowDebtLists_Click(object sender, RoutedEventArgs e)
         {
-            NavigateToPage(new AllDebtsPage());
+            NavigationServiceSingleton.GetNavigationService().NavigateToPage(new AllDebtsPage());
         }
     }
 }

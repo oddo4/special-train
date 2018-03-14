@@ -72,7 +72,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Classes\Debt.cs" />
+    <Compile Include="Classes\LoadDatasInListView.cs" />
     <Compile Include="Classes\Transaction.cs" />
+    <Compile Include="Classes\NavigationServiceSingleton.cs" />
     <Compile Include="Pages\AllDebtsPage.xaml.cs">
       <DependentUpon>AllDebtsPage.xaml</DependentUpon>
     </Compile>

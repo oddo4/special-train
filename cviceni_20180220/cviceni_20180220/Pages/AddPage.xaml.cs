@@ -37,10 +37,10 @@ namespace cviceni_20180220
             InitializeComponent();
             this.itemsList = itemsList;
             item = new Item();
+            transaction = new Transaction();
 
             if (itemsList.Type == 0)
             {
-                transaction = new Transaction();
                 txtBlkHeader.Text = "Přidat výdaj";
             }
             else
@@ -54,18 +54,14 @@ namespace cviceni_20180220
         {
             InitializeComponent();
             this.item = item;
+            transaction = App.Database.GetTransaction(item.ID);
+
             txtName.Text = item.Name;
             txtCost.Text = item.Cost.ToString();
+            dpDate.SelectedDate = transaction.DateTransaction;
 
-            if (itemsList.Type == 0)
+            if (itemsList.Type == 1)
             {
-                transaction = App.Database.GetTransaction(item.ID);
-                dpDate.SelectedDate = transaction.DateTransaction;
-            }
-            else
-            {
-                debt = App.Database.GetDebt(item.ID);
-                dpDate.SelectedDate = debt.DateToPay;
                 ShowRaiseField();
             }
         }
@@ -77,22 +73,19 @@ namespace cviceni_20180220
             newItem.Cost = int.Parse(txtCost.Text);
             App.Database.SaveItemSync(newItem);
 
-            newItem = App.Database.GetItemSync().Last();
+            newItem = App.Database.GetAllItemsSync().Last();
 
-            if (itemsList.Type == 0)
-            {
-                Transaction newTransaction = transaction;
-                newTransaction.IDItem = newItem.ID;
-                newTransaction.DateTransaction = dpDate.SelectedDate.Value;
+            Transaction newTransaction = transaction;
+            newTransaction.IDItem = newItem.ID;
+            newTransaction.DateTransaction = dpDate.SelectedDate.Value;
 
-                App.Database.SaveTransactionSync(newTransaction);
-            }
-            else
+            App.Database.SaveTransactionSync(newTransaction);
+
+            if (itemsList.Type == 1)
             {
                 Debt newDebt = debt;
-                newDebt.IDItem = newItem.ID;
-                newDebt.DateToPay = dpDate.SelectedDate.Value;
-                newDebt.NextDateToPay = newDebt.DateToPay;
+                newDebt.IDTransaction = newTransaction.ID;
+                newDebt.NextDateToPay = newTransaction.DateTransaction;
                 newDebt.RaiseCounter = 0;
                 newDebt.RaisePercentage = int.Parse(txtRaise.Text);
 
@@ -108,12 +101,12 @@ namespace cviceni_20180220
                 App.Database.SaveItemTiesSync(newItemTies);
             }
 
-            NavigationService.GoBack(); ;
+            NavigationServiceSingleton.GetNavigationService().NavigateBack();
         }
 
         private void btnGoBack_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.GoBack();
+            NavigationServiceSingleton.GetNavigationService().NavigateBack();
         }
         private void ShowRaiseField()
         {
