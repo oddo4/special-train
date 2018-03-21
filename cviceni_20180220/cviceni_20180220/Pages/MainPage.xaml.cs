@@ -1,4 +1,5 @@
-﻿using System;
+﻿using cviceni_20180220.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -21,73 +22,19 @@ namespace cviceni_20180220
     /// </summary>
     public partial class MainPage : Page
     {
+        MainPageViewModel viewModel = new MainPageViewModel();
         public MainPage()
         {
             InitializeComponent();
             //App.Database.DeleteTables();
+            this.DataContext = viewModel;
             NavigationServiceSingleton.GetNavigationService().SetCurrentPage(this);
-            CheckDebts();
-        }
-        private void SetTotalYear()
-        {
-            var result = App.Database.GetItemTotalYear();
-            var totalYear = 0.0;
-            if (result != null)
-            {
-                foreach (Item item in result)
-                {
-                    totalYear += item.Cost;
-                }
-            }
-            txtBlkTotalYear.Text = "Tento rok: " + totalYear.ToString() + " ,-";
-        }
-        private void SetTotalMonth()
-        {
-            var result = App.Database.GetItemTotalMonth();
-            var totalMonth = 0.0;
-            if (result != null)
-            {
-                foreach (Item item in result)
-                {
-                    totalMonth += item.Cost;
-                }
-            }
-
-            txtBlkTotalMonth.Text = "Tento měsíc: " + totalMonth.ToString() + " ,-";
+            viewModel.CheckDebts();
         }
         private void UpdatePage(object sender, EventArgs e)
         {
-            SetTotalYear();
-            SetTotalMonth();
-        }
-        private void CheckDebts()
-        {
-            var today = DateTime.Today;
-            var result = App.Database.GetAllItemsSync();
-
-            foreach (Item item in result)
-            {
-                var debt = App.Database.GetDebt(item.ID);
-                if (debt != null)
-                {
-                    if (debt.NextDateToPay < today)
-                    {
-                        debt.RaiseCounter++;
-                        debt.NextDateToPay = debt.NextDateToPay.AddMonths(1);
-
-                        App.Database.SaveDebtSync(debt);
-                    }
-                }
-            }
-        }
-        private void btnShowSpendLists_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationServiceSingleton.GetNavigationService().NavigateToPage(new AllSpendsPage());
-        }
-
-        private void btnShowDebtLists_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationServiceSingleton.GetNavigationService().NavigateToPage(new AllDebtsPage());
+            viewModel.SetTotalYear();
+            viewModel.SetTotalMonth();
         }
     }
 }
